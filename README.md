@@ -4,7 +4,7 @@
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
  SR860, SR865 and SR865A.
 
-![SR860 GUI screenshot](images/SR860 screenshot.png)
+![SR860 GUI screenshot](images/SR860_screenshot.png "SR860 GUI screenshot")
 
 ## Installation
 You should have a working Python with `pip` (Python package installer) 
