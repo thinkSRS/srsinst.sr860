@@ -4,6 +4,8 @@
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
  SR860, SR865 and SR865A.
 
+![SR860 GUI screenshot](images/SR860 screenshot.png)
+
 ## Installation
 You should have a working Python with `pip` (Python package installer) 
 installed. If you don't,
@@ -80,7 +82,7 @@ the programming chapter (Chapter 4) in the
 for easy reference.
 
 ## Configure SR860 components
-Let's configure the signal components. It has no sub component, and no associated 
+Let's configure the signal components. It has no sub-components, and no associated 
 class methods. Only commands are available.
 
     >>> lockin.signal.dir
