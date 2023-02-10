@@ -1,0 +1,38 @@
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "srsinst.sr860"
+authors = [
+    {name = "Chulhoon Kim"},
+]
+description = "Instrument driver package for the lock-In Amplifier SR860 series from Stanford Research Systems"
+readme = "README.md"
+requires-python = ">=3.7"
+keywords = ["SR860", "SR865A", "SRS", "Stanford Research Systems", "lock-in amplifier"]
+license = {text = "MIT license"}
+classifiers = [
+        "Development Status :: 3 - Alpha",
+        "Intended Audience :: Science/Research",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Topic :: Scientific/Engineering"
+]
+dependencies = [
+    "numpy", "python-vxi11", "srsgui>=0.1.19",
+]
+dynamic = ["version"]
+
+[tool.setuptools.dynamic]
+version = {attr = "srsinst.sr860.__version__"}
+
+[project.optional-dependencies]
+full = ['matplotlib>=3.6.2', 'pyside6']
+
+[project.scripts]
+sr860 = "srsinst.sr860.__main__:main"

@@ -1,0 +1,8 @@
+
+name: SR860 tasks
+
+inst: lockin, srsinst.sr860, SR860
+
+task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
+task: Data streaming, srsinst.sr860.tasks.streamingtask, StreamingTask
+task: Simulated Plot, srsinst.sr860.tasks.simulatedplot, SimulatedPlotTask
