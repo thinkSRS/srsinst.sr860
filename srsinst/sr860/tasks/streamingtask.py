@@ -25,7 +25,7 @@ class StreamingTask(Task):
         DataFormat: ListInput(list(DataStream.FormatDict.keys())),
         PacketSize: IntegerListInput([1024, 512, 256, 128]),
         Rate: IntegerInput(4, '  (2^n) ', 0, 20, 1),
-        Port: IntegerInput(8086, '', 1024, 65535, 1)
+        Port: IntegerInput(1865, '', 1024, 65535, 1)
     }
 
     def setup(self):

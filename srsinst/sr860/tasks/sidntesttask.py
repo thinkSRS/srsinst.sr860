@@ -21,9 +21,9 @@ class SidnTask(Task):
 
     def setup(self):
         self.logger = logging.getLogger(__file__)
-        self.lia = get_sr860(self)
+        self.lockin = get_sr860(self)
         
-        print(self.lia.query_text('*idn?'))
+        print(self.lockin.query_text('*idn?'))
 
         # Mark the time 0
         self.init_time = time.time()
@@ -31,7 +31,7 @@ class SidnTask(Task):
     def test(self):
         start_time = time.time()
         for i in range(self.Repeat):
-            print(self.lia.query_text('*idn?'))
+            print(self.lockin.query_text('*idn?'))
         finish_time = time.time()
         print('Time for {} *idn: {}'.format(self.Repeat, finish_time - start_time))
 

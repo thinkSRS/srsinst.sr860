@@ -8,4 +8,4 @@ from .instruments.sr865a import SR865A
 
 from .instruments.get_instruments import get_sr860, get_sr865, get_sr865a
 
-__version__ = "0.0.7"
+__version__ = "0.0.8"

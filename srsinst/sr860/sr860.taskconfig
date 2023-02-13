@@ -3,6 +3,7 @@ name: SR860 tasks
 
 inst: lockin, srsinst.sr860, SR860
 
-task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
+# task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
+task: Set Signal to Current Mode, srsinst.sr860.tasks.signaltocurrentmodetask, SignalToCurrentModeTask
 task: Data streaming, srsinst.sr860.tasks.streamingtask, StreamingTask
 task: Simulated Plot, srsinst.sr860.tasks.simulatedplot, SimulatedPlotTask
