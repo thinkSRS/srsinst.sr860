@@ -5,6 +5,7 @@ from srsgui import Task
 from srsinst.sr860.plots.twobytwosharexplot import TwoByTwoShareXPlot
 from srsinst.sr860.instruments.components import DataStreamBuffer
 
+
 class SimulatedPlotTask(Task):
     input_parameters={}
 

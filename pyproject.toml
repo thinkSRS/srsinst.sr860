@@ -1,6 +1,6 @@
 
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -24,7 +24,7 @@ classifiers = [
         "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-    "numpy", "python-vxi11", "srsgui>=0.1.20",
+    "numpy", "python-vxi11", "srsgui>=0.1.23",
 ]
 dynamic = ["version"]
 

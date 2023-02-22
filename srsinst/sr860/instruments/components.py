@@ -53,31 +53,34 @@ class Reference(Component):
     timebase_mode = DictCommand('TBMODE', TimebaseModeDict)
     timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
     
-    phase = FloatCommand('PHAS')
-    frequency = FloatCommand('FREQ')
-    internal_frequency = FloatCommand('FREQINT')
+    phase = FloatCommand('PHAS', unit='deg',min=-360000, max=360000, step=0.01,
+                                 fmt='{:6e}', default_value=0.0)
+
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, 500000.0, 0.0001,)
+    internal_frequency = FloatCommand('FREQINT','Hz', 0.001, 500000.0, 0.01)
     external_frequency = FloatGetCommand('FREQEXT')
     detection_frequency = FloatGetCommand('FREQDET')
     
-    harmonics = IntIndexCommand('HARM', 99, 1)
-    harmonics_dual = IntIndexCommand('HARMDUAL', 99, 1)
+    harmonics = IntCommand('HARM', '', 1, 99)
+    harmonics_dual = IntCommand('HARMDUAL', '', 1, 99)
     
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
     blade_phase = FloatCommand('BLADEPHASE')
     
     sine_out_amplitude = FloatCommand('SLVL')
     sine_out_offset = FloatCommand('SOFF')
-    sine_out_dc_mode = FloatCommand('REFM')
+    sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
+
     frequency_preset = FloatIndexCommand('PSTF', 3)
-    
     sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3)
     sine_out_offset_preset = FloatIndexCommand('PSTL', 3)
 
     exclude_capture = [harmonics, harmonics_dual]
+
     def auto_phase(self):
         self.comm.send('APHS')
 
@@ -132,23 +135,27 @@ class Signal(Component):
         18: 2,
         24: 3
     }
+    OffOnDict = {'Off': 0,
+                 'On':  1
+    }
 
     input_mode = DictCommand('IVMD', InputModeDict)
     
     voltage_input_mode = DictCommand('ISRC', VoltageInputModeDict)
     voltage_input_coupling = DictCommand('ICPL', VoltageInputCouplingDict)
+
     voltage_input_shield = DictCommand('IGND', VoltageInputShieldDict)
     voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict)
     voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict)
     
-    current_input_gain = DictCommand('ICUR', CurrentInputGainDict)
-    current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict)
-    
-    time_constant = DictCommand('OFLT', TimeConstantDict)
+    current_input_gain = DictCommand('ICUR', CurrentInputGainDict, unit='Ohm', fmt='{:0e}')
+    current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict, unit='A', fmt='{:0e}')
+    time_constant = DictCommand('OFLT', TimeConstantDict, unit='s', fmt='{:0e}')
+
     strength_indicator = IntGetCommand('ILVL')
-    filter_slope = DictCommand('OFSL', FilterSlopeDict)
-    sync_filter = BoolCommand('SYNC')
-    advanced_filter = BoolCommand('ADVFILT')
+    filter_slope = DictCommand('OFSL', FilterSlopeDict, unit='dB/oct')
+    sync_filter = DictCommand('SYNC', OffOnDict)
+    advanced_filter = DictCommand('ADVFILT', OffOnDict)
     equivalent_noise_bandwidth = FloatCommand('ENBW')
 
 
@@ -598,12 +605,21 @@ class DataStream(Component):
         self.prepared_channel = self.channel
 
         self.prepared_packet_size = self.packet_size
-        self.unpack_format = '>{}h'.format(self.prepared_packet_size // 2) if self.format == 'int16'     else            '>{}f'.format(self.prepared_packet_size // 4)
+        self.unpack_format = '>{}h'.format(self.prepared_packet_size // 2) if self.format == 'int16' else\
+                             '>{}f'.format(self.prepared_packet_size // 4)
         self.data.reset(self.data_buffer_size)
 
     def receive_packet(self):
         buffer, _ = self.udp_socket.recvfrom(self.prepared_packet_size + 4)
-        packet_number = unpack_from('>I', buffer)[0] & 0xffff
+        header = unpack_from('>I', buffer)[0]
+        packet_number = header & 0xff
+        
+        # from the manual page 172
+        packet_content = (header >> 8) & 0x0f
+        packet_size = (header >> 12) & 0x0f
+        packet_rate = (header >> 16) & 0xff
+        packet_status = (header >> 24) & 0xff
+
         vals = unpack_from(self.unpack_format, buffer, 4)
 
         arr = None
@@ -725,3 +741,34 @@ class Status(Component):
 
     def clear(self):
         self.comm.send('*CLS')
+
+    def get_status_text(self):
+        msg = ''
+        status_byte = self.serial_poll
+        if self.SerialPollStatusBitDict[Keys.ERR]:
+            err = self.error
+            for key, val in self.ErrorStatusBitDict.items():
+                if 2 ** val & err:
+                    msg += 'Error bit {}, {} is set, '.format(val, key)
+
+        if self.SerialPollStatusBitDict[Keys.LIA]:
+            lia = self.lock_in
+            for key, val in self.LiaStatusBitDict.items():
+                if 2 ** val & lia:
+                    msg += 'LIA status bit {}, {} is set, '.format(val, key)
+
+        if self.SerialPollStatusBitDict[Keys.ESB]:
+            event = self.event
+            for key, val in self.EventStatusBitDict.items():
+                if 2 ** val & event:
+                    msg += 'Event status bit {}, {} is set, '.format(val, key)
+
+        ovld = self.overload
+        if ovld:
+            for key, val in self.OverloadStatusBitDict.items():
+                if 2 ** val & ovld:
+                    msg += 'Overload bit {}, {} is set, '.format(val, key)
+
+        if msg == '':
+            msg = 'OK'
+        return msg

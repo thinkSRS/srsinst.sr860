@@ -3,7 +3,20 @@ name: SR860 tasks
 
 inst: lockin, srsinst.sr860, SR860
 
-# task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
-task: Set Signal to Current Mode, srsinst.sr860.tasks.signaltocurrentmodetask, SignalToCurrentModeTask
+task: Reference/Config. Reference,  srsinst.sr860.tasks.configurereferencetask,  ConfigureReferenceTask
+task: Reference/Auto phase,         srsinst.sr860.tasks.autofunctiontask,        AutoFunctionTask
+
+task: Signal/Set to Current Mode,   srsinst.sr860.tasks.signaltocurrentmodetask, SignalToCurrentModeTask
+task: Signal/Set to Voltage Mode,   srsinst.sr860.tasks.signaltovoltagemodetask, SignalToVoltageModeTask
+task: Signal/Auto range or scale,  srsinst.sr860.tasks.autofunctiontask,        AutoFunctionTask
+task: Aux/Set Aux Output voltage,   srsinst.sr860.tasks.auxoutputtask,           AuxOutputTask
+
+task: Scan/Set to Frequency Scan Mode, srsinst.sr860.tasks.scanfrequencytask,       ScanFrequencyTask
+task: Scan/Set to Ref. Amplitude Scan Mode, srsinst.sr860.tasks.scanrefamplitudetask, ScanRefAmplitudeTask
+task: Scan/Set to Ref. Offset Scan Mode, srsinst.sr860.tasks.scanrefoffsettask,       ScanRefOffsetTask
+task: Scan/Set to Aux Out1 Scan Mode, srsinst.sr860.tasks.scanauxout1task,      ScanAuxOut1Task
+task: Scan/Set to Aux Out2 Scan Mode, srsinst.sr860.tasks.scanauxout2task,      ScanAuxOut2Task
+
+task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
 task: Data streaming, srsinst.sr860.tasks.streamingtask, StreamingTask
 task: Simulated Plot, srsinst.sr860.tasks.simulatedplot, SimulatedPlotTask

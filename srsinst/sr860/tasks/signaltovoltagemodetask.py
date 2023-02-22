@@ -9,17 +9,20 @@ from srsinst.sr860.instruments.components import Signal
 from srsinst.sr860.instruments.keys import Keys
 
 
-class SignalToCurrentModeTask(Task):
+class SignalToVoltageModeTask(Task):
     """
 When the task is selected, the relevant parameters are read from the unit, \
 and updates the input panel display. The values in the unit will change, when the \
 Apply button is pressed.
 
-When this task runs, it sets the input mode to the current inout mode.
+When this task runs, it sets the input mode to the voltage inout mode.
     """
     InstName = 'inst to change'
-    InputGain = 'input gain (Ohm)'
-    Sensitivity = 'sensitivity (A)'
+    InputMode = 'input mode'
+    InputCoupling = 'input coupling'
+    InputShield = 'input shield'
+    InputRange = 'input range (V)'
+    InputSens = 'input sensitivity (V)'
     TimeConstant = 'time constant (s)'
     FilterSlope = 'filter slope (dB/oct)'
     SyncFilter = 'synchronous filter'
@@ -27,8 +30,11 @@ When this task runs, it sets the input mode to the current inout mode.
 
     input_parameters = {
         InstName:       InstrumentInput(),
-        InputGain:      CommandInput('signal.current_input_gain', Signal.current_input_gain),
-        Sensitivity:    CommandInput('signal.current_sensitivity', Signal.current_sensitivity),
+        InputMode:      CommandInput('signal.voltage_input_mode', Signal.voltage_input_mode),
+        InputCoupling:  CommandInput('signal.voltage_input_coupling', Signal.voltage_input_coupling),
+        InputShield:    CommandInput('signal.voltage_input_shield', Signal.voltage_input_shield),
+        InputRange:     CommandInput('signal.voltage_input_range', Signal.voltage_input_range),
+        InputSens:      CommandInput('signal.voltage_sensitivity', Signal.voltage_sensitivity),
         TimeConstant:   CommandInput('signal.time_constant', Signal.time_constant),
         FilterSlope:    CommandInput('signal.filter_slope', Signal.filter_slope),
         SyncFilter:     CommandInput('signal.sync_filter', Signal.sync_filter),
@@ -40,10 +46,11 @@ When this task runs, it sets the input mode to the current inout mode.
         self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
 
     def test(self):
-        self.lockin.signal.input_mode = Keys.Current
-        self.params = self.get_all_input_parameters()
-        self.logger.info(self.params)
-        self.logger.info('Input mode change to the current mode')
+        # Change to Voltage mode
+        self.lockin.signal.input_mode = Keys.Voltage
+
+        self.logger.info(self.get_all_input_parameters())
+        self.logger.info('Input mode change to the voltage mode')
 
     def cleanup(self):
         pass

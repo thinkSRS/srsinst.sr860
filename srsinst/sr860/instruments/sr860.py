@@ -50,7 +50,7 @@ class SR860(Instrument):
     def __init__(self, interface_type=None, *args):
         super().__init__(interface_type, *args)
 
-        self.reference = Reference(self)
+        self.ref = Reference(self)
         self.signal = Signal(self)
         self.output = Output(self)
         self.aux = Aux(self)
@@ -71,3 +71,6 @@ class SR860(Instrument):
 
     def reset(self):
         self.send('*RST')
+
+    def get_status(self):
+        return self.status.get_status_text()
