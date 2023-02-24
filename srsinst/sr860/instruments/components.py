@@ -60,9 +60,9 @@ class Reference(Component):
     internal_frequency = FloatCommand('FREQINT','Hz', 0.001, 500000.0, 0.01)
     external_frequency = FloatGetCommand('FREQEXT')
     detection_frequency = FloatGetCommand('FREQDET')
-    
-    harmonics = IntCommand('HARM', '', 1, 99)
-    harmonics_dual = IntCommand('HARMDUAL', '', 1, 99)
+
+    harmonic = IntCommand('HARM', '', 1, 99)
+    harmonic_dual = IntCommand('HARMDUAL', '', 1, 99)
     
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
     blade_phase = FloatCommand('BLADEPHASE')
@@ -79,7 +79,7 @@ class Reference(Component):
     sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3)
     sine_out_offset_preset = FloatIndexCommand('PSTL', 3)
 
-    exclude_capture = [harmonics, harmonics_dual]
+    exclude_capture = [harmonic, harmonic_dual]
 
     def auto_phase(self):
         self.comm.send('APHS')
@@ -135,8 +135,8 @@ class Signal(Component):
         18: 2,
         24: 3
     }
-    OffOnDict = {'Off': 0,
-                 'On':  1
+    OffOnDict = {Keys.Off: 0,
+                 Keys.On:  1
     }
 
     input_mode = DictCommand('IVMD', InputModeDict)
@@ -398,11 +398,11 @@ class Scan(Component):
         2700.0: 16
     }
     StateDict = {
-        Keys.OFF:     0,
-        Keys.RESET:   1,
-        Keys.RUNNING: 2,
-        Keys.PAUSED:  3,
-        Keys.DONE:    4
+        Keys.Off:     0,
+        Keys.Reset:   1,
+        Keys.Running: 2,
+        Keys.Paused:  3,
+        Keys.Done:    4
     }
     RangeDict = {
         Keys.BEGIN: 0,
@@ -613,7 +613,7 @@ class DataStream(Component):
         buffer, _ = self.udp_socket.recvfrom(self.prepared_packet_size + 4)
         header = unpack_from('>I', buffer)[0]
         packet_number = header & 0xff
-        
+
         # from the manual page 172
         packet_content = (header >> 8) & 0x0f
         packet_size = (header >> 12) & 0x0f
@@ -767,8 +767,8 @@ class Status(Component):
         if ovld:
             for key, val in self.OverloadStatusBitDict.items():
                 if 2 ** val & ovld:
-                    msg += 'Overload bit {}, {} is set, '.format(val, key)
+                    msg += 'Overload bit {}, {}, is set, '.format(val, key)
 
         if msg == '':
-            msg = 'OK'
-        return msg
+            msg = 'OK,'
+        return msg[:-1]
