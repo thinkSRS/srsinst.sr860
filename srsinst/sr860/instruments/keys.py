@@ -9,7 +9,7 @@ class Keys:
     Dual = 'dual'
     Chop = 'chop'
     Sine = 'sine'
-    PisitiveTTL = 'positive TTL'
+    PositiveTTL = 'positive TTL'
     NegativeTTL = 'negative TTL'
     R50Ohms = '50 Ohms'
     R1Meg = '1 Meg'
@@ -68,7 +68,7 @@ class Keys:
     AuxOutput1 = 'aux out 1'
     AuxOutput2 = 'aux out 2'
 
-    Phase = 'Phase'
+    Phase = 'phase'
     SineOutputAmplitude = 'amplitude'
     DCLevel = 'DC level'
     InternalFrequency = 'int. freq.'

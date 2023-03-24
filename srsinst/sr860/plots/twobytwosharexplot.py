@@ -13,7 +13,7 @@ class TwoByTwoShareXPlot:
             self.update_rate = 25
 
         self.update_period = 1.0 / self.update_rate
-        self.max_points_in_plot = 10000
+        self.max_points_in_plot = 5000
 
         self.ax = self.figure.subplots(nrows=2, ncols=2, sharex=True)
         li00, = self.ax[0][0].plot(self.data.time[:2], self.data.x[:2], color='#00d000')
@@ -25,10 +25,11 @@ class TwoByTwoShareXPlot:
         self.xlim_min = 0.0
         self.xlim_max = 10000
         self.ax[0][0].set_xlim(self.xlim_min, self.xlim_max)
-        self.ax[0][0].set_ylim(-5, 5)
-        self.ax[0][1].set_ylim(-5, 5)
-        self.ax[1][0].set_ylim(-5, 5)
-        self.ax[1][1].set_ylim(-200, 200)
+
+        self.ax[0][0].margins(y=2.0)
+        self.ax[0][1].margins(y=2.0)
+        self.ax[1][0].margins(y=2.0)
+        self.ax[1][1].margins(y=2.0)
 
         self.ax[0][0].set_title('X')
         self.ax[0][1].set_title('Y')
@@ -44,8 +45,9 @@ class TwoByTwoShareXPlot:
         self.ax[1][0].callbacks.connect('xlim_changed', self.on_xlim_changed)
         self.ax[1][1].callbacks.connect('xlim_changed', self.on_xlim_changed)
 
+        self.init_plot = True
         self.init_time = time.time()
-        self.last_time = self.init_time
+        self.last_updated_time = self.init_time
 
     def on_xlim_changed(self, event_ax):
         x_min, x_max = event_ax.get_xlim()
@@ -61,7 +63,7 @@ class TwoByTwoShareXPlot:
 
     def request_plot_update(self):
         current_time = time.time()
-        if current_time - self.last_time < self.update_period:
+        if current_time - self.last_updated_time < self.update_period:
             return False
 
         data_size = self.data.get_data_size()
@@ -75,7 +77,13 @@ class TwoByTwoShareXPlot:
         self.line[2].set_data(ti, self.data.r[s])
         self.line[3].set_data(ti, self.data.th[s])
 
-        self.last_time = current_time
+        if self.init_plot:
+            for i in range(4):
+                self.ax[i // 2][i % 2].relim()
+                self.ax[i // 2][i % 2].autoscale_view()
+            self.init_plot = False
+
+        self.last_updated_time = current_time
         return True
 
     def init_data_save(self, task):

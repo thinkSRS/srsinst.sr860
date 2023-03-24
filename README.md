@@ -4,7 +4,7 @@
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
  SR860, SR865 and SR865A.
 
-![screenshot](SR860_screenshot.png "  ")
+![SR860 GUI screenshot](images/SR860_screenshot.png "  ")
 
 ## Installation
 You should have a working Python with `pip` (Python package installer) 
@@ -13,7 +13,7 @@ installed. If you don't,
 
 To install `srsinst.sr860` as an instrument driver , use Python package installer `pip` from the command line.
 
-    python -m pip install srsinst.rga
+    python -m pip install srsinst.sr860
 
 To use it as a GUI application, create a virtual environment, 
 if necessary, and install:

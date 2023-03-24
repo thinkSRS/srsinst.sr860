@@ -19,6 +19,8 @@ from .keys import Keys
 
 
 class Reference(Component):
+    MaxFrequency = 500000.0
+
     TimebaseModeDict = {
         Keys.Auto: 0,
         Keys.Internal: 1
@@ -43,7 +45,7 @@ class Reference(Component):
     }
     TriggerModeDict = {
         Keys.Sine: 0,
-        Keys.PisitiveTTL: 1,
+        Keys.PositiveTTL: 1,
         Keys.NegativeTTL: 2
     }
     TriggerInputDict = {
@@ -53,11 +55,11 @@ class Reference(Component):
     timebase_mode = DictCommand('TBMODE', TimebaseModeDict)
     timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
     
-    phase = FloatCommand('PHAS', unit='deg',min=-360000, max=360000, step=0.01,
+    phase = FloatCommand('PHAS', unit='deg', min=-360000, max=360000, step=0.000001,
                                  fmt='{:6e}', default_value=0.0)
 
-    frequency = FloatCommand('FREQ', 'Hz', 0.001, 500000.0, 0.0001,)
-    internal_frequency = FloatCommand('FREQINT','Hz', 0.001, 500000.0, 0.01)
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001,)
+    internal_frequency = FloatCommand('FREQINT','Hz', 0.001, MaxFrequency, 0.0001)
     external_frequency = FloatGetCommand('FREQEXT')
     detection_frequency = FloatGetCommand('FREQDET')
 
@@ -67,19 +69,17 @@ class Reference(Component):
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
     blade_phase = FloatCommand('BLADEPHASE')
     
-    sine_out_amplitude = FloatCommand('SLVL')
-    sine_out_offset = FloatCommand('SOFF')
+    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9)
+    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4)
     sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3)
-    sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3)
-    sine_out_offset_preset = FloatIndexCommand('PSTL', 3)
-
-    exclude_capture = [harmonic, harmonic_dual]
+    frequency_preset = FloatIndexCommand('PSTF', 3, 0, " V", 0.001, MaxFrequency, 0.0001)
+    sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, " V", 0, 2.0, 1e-9)
+    sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, " V", -5.0, 5.0, 1e-4)
 
     def auto_phase(self):
         self.comm.send('APHS')

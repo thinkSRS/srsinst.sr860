@@ -8,7 +8,7 @@ name = "srsinst.sr860"
 authors = [
     {name = "Chulhoon Kim"},
 ]
-description = "Instrument driver package for the lock-In Amplifier SR860 series from Stanford Research Systems"
+description = "Instrument driver package for the Lock-In Amplifiers, SR860 series from Stanford Research Systems"
 readme = "README.md"
 requires-python = ">=3.7"
 keywords = ["SR860", "SR865A", "SRS", "Stanford Research Systems", "lock-in amplifier"]
@@ -24,7 +24,7 @@ classifiers = [
         "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-    "numpy", "python-vxi11", "srsgui>=0.1.23",
+    "numpy", "python-vxi11", "srsgui>=0.1.26",
 ]
 dynamic = ["version"]
 

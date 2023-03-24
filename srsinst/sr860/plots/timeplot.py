@@ -10,7 +10,10 @@ logger = logging.getLogger(__name__)
 
 
 class TimePlot:
-    def __init__(self, parent: Task, ax: Axes, plot_name='', data_names=('Y',), save_to_file=True, use_datetime=True):
+    def __init__(self, parent: Task, ax: Axes, plot_name='', data_names=('Y',), save_to_file=True,
+                 use_datetime=True, plot_options=None):
+        if plot_options is None:
+            plot_options = {}
         if not issubclass(type(parent), Task):
             raise TypeError('Invalid parent {} is not a Task subclass'.format(type(parent)))
         # if type(ax) is not Axes or AxesSubplot:
@@ -21,12 +24,15 @@ class TimePlot:
         self.ax = ax
         self.name = plot_name.strip()
 
+        self.min_value = 0
+        self.max_value = 0
+
         self.conversion_factor = 1
         self.unit = ''
         self.use_datetime = use_datetime
 
-        self.figure_updated_time = 0
-        self.figure_update_period = 0.1
+        self.updated_time = 0
+        self.update_period = 0.1
 
         self.save_to_file = False
         if hasattr(self.parent, 'session_handler') and self.parent.session_handler:
@@ -41,16 +47,16 @@ class TimePlot:
 
         self._data_buffer_size = 1000000  # Maximum data points per line
         self.data_points = 0  # Current data points in data buffer
-        self.max_points_in_plot = 10000  # Maximum point to plot
+        self.max_points_in_plot = 5000  # Maximum point to plot
 
         if self.use_datetime:
-            self.time = np.zeros(self._data_buffer_size).astype('datetime64[s]')
+            self.time = np.zeros(self._data_buffer_size).astype('datetime64[ms]')
         else:
             self.time = np.zeros(self._data_buffer_size, dtype=np.float64)
 
         for key in self.data_keys:
             self.data[key] = np.zeros(self._data_buffer_size)
-            self.lines[key], = self.ax.plot([1.0], [1.0], label=key)
+            self.lines[key], = self.ax.plot([1.0], [1.0], label=key, **plot_options)
 
         # significant digits in a number in text
         self.round_float_resolution = 4
@@ -124,15 +130,25 @@ class TimePlot:
             self.data[key][self.data_points] = point * self.conversion_factor
         self.data_points += 1
 
-        if len(self.time) == 1:
-            min_value = min(data_list)
-            max_value = max(data_list)
-            if min_value == 0 and max_value == 0:
+        if self.data_points == 1:
+            self.min_value = min(data_list) * self.conversion_factor
+            self.max_value = max(data_list) * self.conversion_factor
+        elif self.data_points < 5:
+            temp_min_value = min(data_list) * self.conversion_factor
+            temp_max_value = max(data_list) * self.conversion_factor
+            self.min_value = temp_min_value if temp_min_value < self.min_value else self.min_value
+            self.max_value = temp_max_value if temp_max_value > self.max_value else self.max_value
+
+            if self.min_value == 0 and self.max_value == 0:
                 min_value = -1.0
                 max_value = 1.0
-            min_value *= self.conversion_factor
-            max_value *= self.conversion_factor
-            self.ax.set_ylim(min_value - abs(min_value)/2, max_value + abs(max_value)/2)
+            else:
+                min_value = self.min_value
+                max_value = self.max_value
+
+            margin = (max_value - min_value)
+            self.ax.set_ylim(min_value - margin, max_value + margin)
+
         if update_figure:
             self.update_plot()
         self.save_data(data_list)
@@ -141,7 +157,7 @@ class TimePlot:
         if not self.save_to_file:
             return
         if not self.header_saved:
-            self.parent.session_handler.add_dict_to_file(self.name, self.get_plot_info())
+            self.parent.add_dict_to_file(self.name, self.get_plot_info())
             if self.use_datetime:
                 self.parent.create_table_in_file(self.name, 'Date time', *self.data_keys)
             else:
@@ -178,7 +194,7 @@ class TimePlot:
 
     def update_plot(self):
         current_time = time.time()
-        if current_time - self.figure_updated_time < self.figure_update_period:
+        if current_time - self.updated_time < self.update_period:
             return
 
         if self.use_datetime:
@@ -200,7 +216,7 @@ class TimePlot:
             self.lines[key].set_ydata(self.data[key][s])
 
         self.parent.request_figure_update(self.ax.figure)
-        self.figure_updated_time = current_time
+        self.updated_time = current_time
 
     def cleanup(self):
         pass
