@@ -1,6 +1,5 @@
 
 import time
-import logging
 
 from srsgui import Task
 from srsgui import IntegerInput, FloatInput, ListInput, IntegerListInput
@@ -29,7 +28,7 @@ class StreamingTask(Task):
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.lia = get_sr860(self)
         print(self.lia.query_text('*idn?'))
 

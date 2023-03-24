@@ -1,5 +1,4 @@
 import time
-import logging
 
 from srsgui import Task
 from srsgui import InstrumentInput, ListInput
@@ -24,7 +23,7 @@ class AutoFunctionTask(Task):
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
         self.params = self.get_all_input_parameters()
 

@@ -1,5 +1,4 @@
 import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -26,7 +25,7 @@ Sine output is generated based on the frequency of the selected reference source
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.params = self.get_all_input_parameters()
         self.lockin = get_sr860(self, self.params[self.InstName])
 

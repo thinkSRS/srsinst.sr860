@@ -1,5 +1,4 @@
 import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -11,9 +10,8 @@ from srsinst.sr860.instruments.keys import Keys
 
 class AuxOutputTask(Task):
     """
-    When the task is selected, it reads the current auxiliary output values from the unit. \
-Adjust the output values from the input panel, and press the adjust button. \
-It will change the aux output values, even without running the task.
+It will change the aux output values when the Apply button is pressed, \
+even without running the task.
     """
 
     InstName = 'inst to change'
@@ -31,14 +29,14 @@ It will change the aux output values, even without running the task.
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
 
     def test(self):
 
         self.params = self.get_all_input_parameters()
+        self.logger.info('Aux output values')
         self.logger.info(self.params)
-        self.logger.info('Set aux outputs')
 
     def cleanup(self):
         pass

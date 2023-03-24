@@ -1,5 +1,3 @@
-import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput

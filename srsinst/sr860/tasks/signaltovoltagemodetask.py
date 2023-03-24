@@ -1,5 +1,3 @@
-import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -11,11 +9,9 @@ from srsinst.sr860.instruments.keys import Keys
 
 class SignalToVoltageModeTask(Task):
     """
-When the task is selected, the relevant parameters are read from the unit, \
-and updates the input panel display. The values in the unit will change, when the \
-Apply button is pressed.
-
-When this task runs, it sets the input mode to the voltage inout mode.
+It sets the input mode to the voltage inout mode. \
+Make sure the signal is connected to the voltage input connector A or \
+both A and B on the front panel.
     """
     InstName = 'inst to change'
     InputMode = 'input mode'
@@ -42,14 +38,14 @@ When this task runs, it sets the input mode to the voltage inout mode.
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
-        self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
+        self.logger = self.get_logger(__name__)
+        self.params = self.get_all_input_parameters()
+        self.lockin = get_sr860(self, self.params[self.InstName])
 
     def test(self):
         # Change to Voltage mode
         self.lockin.signal.input_mode = Keys.Voltage
-
-        self.logger.info(self.get_all_input_parameters())
+        self.logger.info(self.params)
         self.logger.info('Input mode change to the voltage mode')
 
     def cleanup(self):

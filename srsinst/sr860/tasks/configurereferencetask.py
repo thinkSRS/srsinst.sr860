@@ -1,5 +1,4 @@
 import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -11,12 +10,8 @@ from srsinst.sr860.instruments.keys import Keys
 
 class ConfigureReferenceTask(Task):
     """
-When this task runs, it sets the commands in Reference component, \
-reads the relevant parameters from the unit, and updates the input panel display. \
-To change parameter values, press the Apply button.
-
-You change parameters to the values you want, and press the Apply button. \
-After it updates the parameters in the unit, and finishes the task.
+The task shows all parameters in Reference component
+Adjust values and press the Apply button.
     """
     InstName = 'inst to change'
     TimebaseMode = 'timebase mode'
@@ -53,7 +48,7 @@ After it updates the parameters in the unit, and finishes the task.
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
 
     def test(self):

@@ -1,5 +1,3 @@
-import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -11,11 +9,8 @@ from srsinst.sr860.instruments.keys import Keys
 
 class SignalToCurrentModeTask(Task):
     """
-When the task is selected, the relevant parameters are read from the unit, \
-and updates the input panel display. The values in the unit will change, when the \
-Apply button is pressed.
-
-When this task runs, it sets the input mode to the current inout mode.
+It sets the input mode to the current inout mode. \
+Make sure the signal is connected to the current input connector on the front panel.
     """
     InstName = 'inst to change'
     InputGain = 'input gain (Ohm)'
@@ -36,12 +31,12 @@ When this task runs, it sets the input mode to the current inout mode.
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
-        self.lockin = get_sr860(self, self.get_input_parameter(self.InstName))
+        self.logger = self.get_logger(__name__)
+        self.params = self.get_all_input_parameters()
+        self.lockin = get_sr860(self, self.params[self.InstName])
 
     def test(self):
         self.lockin.signal.input_mode = Keys.Current
-        self.params = self.get_all_input_parameters()
         self.logger.info(self.params)
         self.logger.info('Input mode change to the current mode')
 

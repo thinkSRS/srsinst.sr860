@@ -6,12 +6,12 @@ inst: lockin, srsinst.sr860, SR860
 
 task: Signal/Set to Current Mode,   srsinst.sr860.tasks.signaltocurrentmodetask, SignalToCurrentModeTask
 task: Signal/Set to Voltage Mode,   srsinst.sr860.tasks.signaltovoltagemodetask, SignalToVoltageModeTask
-task: Signal/Auto range or scale,  srsinst.sr860.tasks.autofunctiontask,        AutoFunctionTask
 
 task: Reference source/Set to internal mode, srsinst.sr860.tasks.setreferencetointernaltask,  SetReferenceToInternalTask
 task: Reference source/Set to external mode, srsinst.sr860.tasks.setreferencetoexternaltask,  SetReferenceToExternalTask
 task: Reference source/Set to dual mode, srsinst.sr860.tasks.setreferencetodualtask,  SetReferenceToDualTask
 task: Reference source/Set to chop mode with SR540, srsinst.sr860.tasks.setreferencetochoptask,  SetReferenceToChopTask
+task: Auto,  srsinst.sr860.tasks.autofunctiontask,        AutoFunctionTask
 
 task: Sine Output, srsinst.sr860.tasks.configuresineoutputtask,  ConfigureSineOutputTask
 task: Timebase,    srsinst.sr860.tasks.selecttimebasetask,  SelectTimebaseTask
@@ -23,6 +23,8 @@ task: Scan/Set to Aux Out1 Scan Mode, srsinst.sr860.tasks.scanauxout1task,      
 task: Scan/Set to Aux Out2 Scan Mode, srsinst.sr860.tasks.scanauxout2task,      ScanAuxOut2Task
 
 task: Aux/Set Aux Output voltage,   srsinst.sr860.tasks.auxoutputtask,           AuxOutputTask
+task: Data channels/Config,   srsinst.sr860.tasks.assignparametertochannel, AssignParameterToChannel
+task: Data channels/Data transfer,   srsinst.sr860.tasks.datatransferfromdatachannelstask, DataTransferFromDataChannelsTask
 
 task: *IDN? test,     srsinst.sr860.tasks.sidntesttask,  SidnTask
 task: Data streaming, srsinst.sr860.tasks.streamingtask, StreamingTask

@@ -1,9 +1,5 @@
 
 import time
-import logging
-import socket
-import struct
-import threading
 
 from srsgui import Task
 from srsgui import IntegerInput, ListInput
@@ -20,7 +16,7 @@ class SidnTask(Task):
     Repeat = 100
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.lockin = get_sr860(self)
         
         print(self.lockin.query_text('*idn?'))
@@ -33,7 +29,7 @@ class SidnTask(Task):
         for i in range(self.Repeat):
             print(self.lockin.query_text('*idn?'))
         finish_time = time.time()
-        print('Time for {} *idn: {}'.format(self.Repeat, finish_time - start_time))
+        print('Time for {:.3f} *idn: {} s'.format(self.Repeat, finish_time - start_time))
 
     def cleanup(self):
         pass

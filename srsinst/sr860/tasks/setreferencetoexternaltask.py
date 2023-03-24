@@ -1,5 +1,3 @@
-import time
-import logging
 
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
@@ -30,7 +28,7 @@ Change the reference source to the external.
     }
 
     def setup(self):
-        self.logger = logging.getLogger(__file__)
+        self.logger = self.get_logger(__name__)
         self.params = self.get_all_input_parameters()
         self.lockin = get_sr860(self, self.params[self.InstName])
         self.delay = 0.5
