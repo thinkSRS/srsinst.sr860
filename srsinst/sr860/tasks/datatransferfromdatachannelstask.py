@@ -27,7 +27,7 @@ class DataTransferFromDataChannelsTask(Task):
         Channel2: CommandInput('display.config[1]', Display.config),
         Channel3: CommandInput('display.config[2]', Display.config),
         Channel4: CommandInput('display.config[3]', Display.config),
-        Delay: FloatInput(1, ' s', 0.0, 600, 0.1),
+        Delay: FloatInput(0.1, ' s', 0.0, 600, 0.1),
         DateTime: BoolInput(['Seconds', 'Date time'])
     }
 

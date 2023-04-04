@@ -151,9 +151,9 @@ class TimePlot:
 
         if update_figure:
             self.update_plot()
-        self.save_data(data_list)
+        self.save_data(self.time[self.data_points - 1], data_list)
 
-    def save_data(self, data_list):
+    def save_data(self, timestamp, data_list):
         if not self.save_to_file:
             return
         if not self.header_saved:
@@ -165,12 +165,11 @@ class TimePlot:
             self.header_saved = True
         # write the spectrum in to the data file
         if self.use_datetime:
-            timestamp = datetime.now().isoformat()
-            # timestamp = datetime.now().strftime('%H:%M:%S')
+            ts = str(timestamp)
         else:
-            timestamp = self.round_float(time.time() - self.initial_time)
+            ts = self.round_float(timestamp)
 
-        self.parent.add_to_table_in_file(self.name, timestamp, *map(self.round_float, data_list))
+        self.parent.add_to_table_in_file(self.name, ts, *map(self.round_float, data_list))
 
     def round_float(self, number):
         # set the resolution of the number with self.round_float_resolution

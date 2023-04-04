@@ -21,6 +21,11 @@ class SidnTask(Task):
         
         print(self.lockin.query_text('*idn?'))
 
+        print('Start capturing commands...')
+        capture = self.lockin.capture_commands(True)
+        self.session_handler.add_dict_to_file('command capture', capture)
+        print('Finished capturing commands...')
+
         # Mark the time 0
         self.init_time = time.time()
 

@@ -52,10 +52,10 @@ class Keys:
     BarFFT = 'bar FFT'
     Bar8 = 'bar 8'
 
-    Data1 = 'Data 1'
-    Data2 = 'Data 2'
-    Data3 = 'Data 3'
-    Data4 = 'Data 4'
+    Data1 = 'DAT1'
+    Data2 = 'DAT2'
+    Data3 = 'DAT3'
+    Data4 = 'DAT4'
 
     AuxInput1 = 'aux in 1'
     AuxInput2 = 'aux in 2'

@@ -1,4 +1,4 @@
-
+import time
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
 from srsinst.sr860 import SR860, get_sr860

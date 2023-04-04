@@ -59,7 +59,7 @@ class Reference(Component):
                                  fmt='{:6e}', default_value=0.0)
 
     frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001,)
-    internal_frequency = FloatCommand('FREQINT','Hz', 0.001, MaxFrequency, 0.0001)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001)
     external_frequency = FloatGetCommand('FREQEXT')
     detection_frequency = FloatGetCommand('FREQDET')
 
@@ -77,9 +77,9 @@ class Reference(Component):
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3, 0, " V", 0.001, MaxFrequency, 0.0001)
-    sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, " V", 0, 2.0, 1e-9)
-    sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, " V", -5.0, 5.0, 1e-4)
+    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, " V", 0.001, MaxFrequency, 0.0001)
+    sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
+    sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
 
     def auto_phase(self):
         self.comm.send('APHS')
@@ -135,8 +135,9 @@ class Signal(Component):
         18: 2,
         24: 3
     }
-    OffOnDict = {Keys.Off: 0,
-                 Keys.On:  1
+    OffOnDict = {
+        Keys.Off: 0,
+        Keys.On:  1
     }
 
     input_mode = DictCommand('IVMD', InputModeDict)
@@ -286,7 +287,7 @@ class Chart(Component):
         Keys.Maximum:  1,
         Keys.Minimum:  2
     }
-    CursorWidthDict={
+    CursorWidthDict = {
         Keys.Line:   0,
         Keys.Narrow: 1,
         Keys.Wide:   2
@@ -296,7 +297,7 @@ class Chart(Component):
         Keys.Data2:   1,
         Keys.Data3:   2,
         Keys.Data4:   3,
-        Keys.Status:   4
+        Keys.Status:  4
     }
 
     time_division = DictCommand('GSPD', TimeDivDict)
@@ -309,9 +310,11 @@ class Chart(Component):
     cursor_display_mode = DictCommand('CURDISP', CursorDisplayModeDict)
     cursor_readout_mode = DictCommand('CURBUG', CursorReadoutModeDict)
     cursor_width = DictCommand('FCRW', CursorWidthDict)
-    cursor_value = IntIndexGetCommand('SCRY', 4, 0, CursorValueDict)
+    cursor_value = FloatIndexGetCommand('SCRY', 4, 0, CursorValueDict)
     cursor_date_time = GetCommand('CURDATTIM')
     cursor_interval_time = GetCommand('CURINTERVAL')
+
+    exclude_capture = [cursor_date_time, cursor_interval_time]
 
     def auto_scal(self, channel):
         self.comm.send(f'GACT {channel}')
@@ -352,6 +355,8 @@ class FFT(Component):
     cursor_width = DictCommand('FCRW', Chart.CursorWidthDict)
     cursor_frequency = FloatGetCommand('FCRX')
     cursor_value = FloatGetCommand('FCRY')
+
+    exclude_capture = [cursor_value]
 
     def auto_scale(self):
         self.comm.send('FAUT')
@@ -461,11 +466,11 @@ class DataCapture(Component):
         Keys.RT:   2,
         Keys.XYRT: 3
     }
-    RunModeDict={
+    RunModeDict = {
         Keys.Once:       0,
         Keys.Continuous: 1
     }
-    TriggerModeDict ={
+    TriggerModeDict = {
         Keys.Immediate:        0,
         Keys.TriggerStart:     1,
         Keys.SamplePerTrigger: 2
@@ -507,10 +512,10 @@ class DataCapture(Component):
             
             buffer += self.comm._read_binary(digits)
             offset = digits + 2
-            buffer_size = int(buffer[2 : offset])
+            buffer_size = int(buffer[2: offset])
             buffer += self.comm._read_binary(buffer_size)
             
-        data_size  = (len(buffer) - offset) // 4
+        data_size = (len(buffer) - offset) // 4
         self.unpack_format = '>{}f'.format(data_size)
         vals = unpack_from(self.unpack_format, buffer, offset)
         if data_type == Keys.X:
@@ -712,28 +717,27 @@ class Status(Component):
         Keys.DataCh4Scale: 11,
     }
 
-    event_enable = IntCommand('*ESE')
-    event = IntGetCommand('*ESR')
-    event_enable_bit = BoolIndexCommand('*ESE', 7, 0, EventStatusBitDict)
-    event_bit = BoolIndexGetCommand('*ESR', 7, 0, EventStatusBitDict)
-
-    serial_poll_enable = IntCommand('*SRE')
-    serial_poll = IntGetCommand('*STB')
     serial_poll_enable_bit = BoolIndexCommand('*SRE', 7, 0, SerialPollStatusBitDict)
+    serial_poll_enable = IntCommand('*SRE')
     serial_poll_bit = BoolIndexGetCommand('*STB', 7, 0, SerialPollStatusBitDict)
+    serial_poll = IntGetCommand('*STB')
+
+    error_enable_bit = BoolIndexCommand('ERRE', 7, 0, ErrorStatusBitDict)
+    error_enable = IntCommand('ERRE')
+    error_bit = BoolIndexGetCommand('ERRS', 7, 0, ErrorStatusBitDict)
+    error = IntGetCommand('ERRS')
+
+    lock_in_enable_bit = BoolIndexCommand('LIAE', 14, 0, LiaStatusBitDict)
+    lock_in_enable = IntCommand('LIAE')
+    lock_in_bit = BoolIndexGetCommand('LIAS', 14, 0, LiaStatusBitDict)
+    lock_in = IntGetCommand('LIAS')
+
+    event_enable_bit = BoolIndexCommand('*ESE', 7, 0, EventStatusBitDict)
+    event_enable = IntCommand('*ESE')
+    event_bit = BoolIndexGetCommand('*ESR', 7, 0, EventStatusBitDict)
+    event = IntGetCommand('*ESR')
 
     power_on_status_clear_bit = BoolCommand('*PSC')
-
-    error_enable = IntCommand('ERRE')
-    error = IntGetCommand('ERRS')
-    error_enable_bit = BoolIndexCommand('ERRE', 7, 0, ErrorStatusBitDict)
-    error_bit = BoolIndexGetCommand('ERRS', 7, 0, ErrorStatusBitDict)
-
-    lock_in_enable = IntCommand('LIAE')
-    lock_in = IntGetCommand('LIAS')
-    lock_in_enable_bit = BoolIndexCommand('LIAE', 14, 0, LiaStatusBitDict)
-    lock_in_bit = BoolIndexGetCommand('LIAS', 14, 0, LiaStatusBitDict)
-
     overload = IntGetCommand('CUROVLDSTAT')
 
     exclude_capture = [event_enable_bit, serial_poll_enable_bit,

@@ -63,7 +63,13 @@ class SR860(Instrument):
         self.capture = DataCapture(self)
         self.stream = DataStream(self)
         self.status = Status(self)
-        
+
+        # Exclude components from capture_commands()
+        self.exclude_capture.append(self.auto)
+        self.exclude_capture.append(self.display)
+        self.exclude_capture.append(self.chart)
+        self.exclude_capture.append(self.fft)
+
     def connect(self, interface_type, *args):
         super().connect(interface_type, *args)
         if isinstance(self.comm, TcpipInterface):
@@ -73,4 +79,10 @@ class SR860(Instrument):
         self.send('*RST')
 
     def get_status(self):
-        return self.status.get_status_text()
+        st = 'Phase: {:.6f} deg\n'.format(self.ref.phase) + \
+             ' Internal F: {:.6e} Hz\n'.format(self.ref.internal_frequency) + \
+             ' Amplitude: {:.6f} V\n'.format(self.ref.sine_out_amplitude) + \
+             ' DC level: {:.6f} V\n'.format(self.ref.sine_out_offset) + \
+             ' Harmonic: {}\n\n'.format(self.ref.harmonic) + \
+             self.status.get_status_text()
+        return st
