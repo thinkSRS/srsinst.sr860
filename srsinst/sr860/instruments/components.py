@@ -56,7 +56,7 @@ class Reference(Component):
     timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
     
     phase = FloatCommand('PHAS', unit='deg', min=-360000, max=360000, step=0.000001,
-                                 fmt='{:6e}', default_value=0.0)
+                                 significant_figures=6, default_value=0.0)
 
     frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001,)
     internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001)
