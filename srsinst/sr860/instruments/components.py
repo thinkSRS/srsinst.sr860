@@ -60,24 +60,24 @@ class Reference(Component):
 
     frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
     internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
-    external_frequency = FloatGetCommand('FREQEXT')
-    detection_frequency = FloatGetCommand('FREQDET')
+    external_frequency = FloatGetCommand('FREQEXT', 'Hz')
+    detection_frequency = FloatGetCommand('FREQDET', 'Hz')
 
     harmonic = IntCommand('HARM', '', 1, 99)
     harmonic_dual = IntCommand('HARMDUAL', '', 1, 99)
     
-    blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
-    blade_phase = FloatCommand('BLADEPHASE')
+    blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict, None, 'slots')
+    blade_phase = FloatCommand('BLADEPHASE', 'degree')
     
-    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 3, 0.0)
-    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 3, 0.0)
+    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 4, 0.0)
+    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 4, 0.0)
     sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, " V", 0.001, MaxFrequency, 0.0001)
+    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
     sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
     sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
 
@@ -146,8 +146,8 @@ class Signal(Component):
     voltage_input_coupling = DictCommand('ICPL', VoltageInputCouplingDict)
 
     voltage_input_shield = DictCommand('IGND', VoltageInputShieldDict)
-    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict)
-    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict)
+    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict, unit='V', fmt='{:0e}')
+    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict, unit='V', fmt='{:0e}')
     
     current_input_gain = DictCommand('ICUR', CurrentInputGainDict, unit='Ohm', fmt='{:0e}')
     current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict, unit='A', fmt='{:0e}')
