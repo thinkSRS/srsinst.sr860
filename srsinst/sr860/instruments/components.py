@@ -3,18 +3,18 @@ import socket
 from struct import unpack_from
 import numpy as np
 
-from srsgui.inst.component import Component
-from srsgui.inst.commands import Command, GetCommand,\
-                                 BoolCommand, BoolGetCommand,\
-                                 IntCommand, IntGetCommand, IntSetCommand,\
-                                 FloatCommand, FloatSetCommand, FloatGetCommand, \
-                                 DictCommand, DictGetCommand
+from srsgui import Component
+from srsgui import Command, GetCommand,\
+                   BoolCommand, BoolGetCommand,\
+                   IntCommand, IntGetCommand, IntSetCommand,\
+                   FloatCommand, FloatSetCommand, FloatGetCommand, \
+                   DictCommand, DictGetCommand
 
-from srsgui.inst.indexcommands import IndexCommand, IndexGetCommand, \
-                                      IntIndexCommand, IntIndexGetCommand, \
-                                      BoolIndexCommand, BoolIndexGetCommand,\
-                                      FloatIndexCommand, FloatIndexGetCommand, \
-                                      DictIndexCommand
+from srsgui import IndexCommand, IndexGetCommand, \
+                   IntIndexCommand, IntIndexGetCommand, \
+                   BoolIndexCommand, BoolIndexGetCommand,\
+                   FloatIndexCommand, FloatIndexGetCommand, \
+                   DictIndexCommand
 from .keys import Keys
 
 
@@ -56,10 +56,10 @@ class Reference(Component):
     timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
     
     phase = FloatCommand('PHAS', unit='deg', min=-360000, max=360000, step=0.000001,
-                                 fmt='{:6e}', default_value=0.0)
+                                 significant_figures=7, default_value=0.0)
 
-    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001,)
-    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001)
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
     external_frequency = FloatGetCommand('FREQEXT')
     detection_frequency = FloatGetCommand('FREQDET')
 
@@ -69,8 +69,8 @@ class Reference(Component):
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
     blade_phase = FloatCommand('BLADEPHASE')
     
-    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9)
-    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4)
+    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 3, 0.0)
+    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 3, 0.0)
     sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     
@@ -198,8 +198,8 @@ class Aux(Component):
         Keys.Channel4: 3
     }
 
-    input = FloatIndexGetCommand('OAUX', 3, 0, ChannelDict)
-    output = FloatIndexCommand('AUXV', 3, 0, ChannelDict)
+    input = FloatIndexGetCommand('OAUX', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
+    output = FloatIndexCommand('AUXV', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
 
 
 class Auto(Component):

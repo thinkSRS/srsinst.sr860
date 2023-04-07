@@ -1,5 +1,5 @@
 import logging
-from srsgui.task import Task
+from srsgui import Task
 from .sr860 import SR860
 from .sr865 import SR865
 from .sr865a import SR865A
