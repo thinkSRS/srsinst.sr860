@@ -3,18 +3,18 @@ import socket
 from struct import unpack_from
 import numpy as np
 
-from srsgui.inst.component import Component
-from srsgui.inst.commands import Command, GetCommand,\
-                                 BoolCommand, BoolGetCommand,\
-                                 IntCommand, IntGetCommand, IntSetCommand,\
-                                 FloatCommand, FloatSetCommand, FloatGetCommand, \
-                                 DictCommand, DictGetCommand
+from srsgui import Component
+from srsgui import Command, GetCommand,\
+                   BoolCommand, BoolGetCommand,\
+                   IntCommand, IntGetCommand, IntSetCommand,\
+                   FloatCommand, FloatSetCommand, FloatGetCommand, \
+                   DictCommand, DictGetCommand
 
-from srsgui.inst.indexcommands import IndexCommand, IndexGetCommand, \
-                                      IntIndexCommand, IntIndexGetCommand, \
-                                      BoolIndexCommand, BoolIndexGetCommand,\
-                                      FloatIndexCommand, FloatIndexGetCommand, \
-                                      DictIndexCommand
+from srsgui import IndexCommand, IndexGetCommand, \
+                   IntIndexCommand, IntIndexGetCommand, \
+                   BoolIndexCommand, BoolIndexGetCommand,\
+                   FloatIndexCommand, FloatIndexGetCommand, \
+                   DictIndexCommand
 from .keys import Keys
 
 
@@ -56,28 +56,27 @@ class Reference(Component):
     timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
     
     phase = FloatCommand('PHAS', unit='deg', min=-360000, max=360000, step=0.000001,
-                                 significant_figures=6, default_value=0.0)
-
-    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001,)
-    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001)
-    external_frequency = FloatGetCommand('FREQEXT')
-    detection_frequency = FloatGetCommand('FREQDET')
+                          significant_figures=7, default_value=0.0)
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
+    external_frequency = FloatGetCommand('FREQEXT', 'Hz')
+    detection_frequency = FloatGetCommand('FREQDET', 'Hz')
 
     harmonic = IntCommand('HARM', '', 1, 99)
     harmonic_dual = IntCommand('HARMDUAL', '', 1, 99)
     
-    blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict)
-    blade_phase = FloatCommand('BLADEPHASE')
+    blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict, None, 'slots')
+    blade_phase = FloatCommand('BLADEPHASE', 'degree')
     
-    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9)
-    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4)
+    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 4, 0.0)
+    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 4, 0.0)
     sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, " V", 0.001, MaxFrequency, 0.0001)
+    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
     sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
     sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
 
@@ -146,8 +145,8 @@ class Signal(Component):
     voltage_input_coupling = DictCommand('ICPL', VoltageInputCouplingDict)
 
     voltage_input_shield = DictCommand('IGND', VoltageInputShieldDict)
-    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict)
-    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict)
+    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict, unit='V', fmt='{:0e}')
+    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict, unit='V', fmt='{:0e}')
     
     current_input_gain = DictCommand('ICUR', CurrentInputGainDict, unit='Ohm', fmt='{:0e}')
     current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict, unit='A', fmt='{:0e}')
@@ -198,8 +197,8 @@ class Aux(Component):
         Keys.Channel4: 3
     }
 
-    input = FloatIndexGetCommand('OAUX', 3, 0, ChannelDict)
-    output = FloatIndexCommand('AUXV', 3, 0, ChannelDict)
+    input = FloatIndexGetCommand('OAUX', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
+    output = FloatIndexCommand('AUXV', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
 
 
 class Auto(Component):

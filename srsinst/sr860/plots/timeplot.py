@@ -4,7 +4,7 @@ import logging
 import numpy as np
 from datetime import datetime, timedelta
 from matplotlib.axes import Axes
-from srsgui.task import Task
+from srsgui import Task
 
 logger = logging.getLogger(__name__)
 

@@ -9,4 +9,4 @@ from .instruments.keys import Keys
 
 from .instruments.get_instruments import get_sr860, get_sr865, get_sr865a
 
-__version__ = "0.0.15"
+__version__ = "0.0.17"
