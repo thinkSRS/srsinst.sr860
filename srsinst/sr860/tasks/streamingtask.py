@@ -64,21 +64,18 @@ class StreamingTask(Task):
 
         self.last_p_id = 0
         self.lia.stream.start()
-        try:
-            while time.time() - self.init_time < self.duration_value:
-                if not self.is_running():
-                    break
+        while time.time() - self.init_time < self.duration_value:
+            block, p_id = self.lia.stream.receive_packet()
+            self.lia.stream.data.add_data_block(*block)
 
-                block, p_id = self.lia.stream.receive_packet()
-                self.lia.stream.data.add_data_block(*block)
+            if self.last_p_id and p_id - self.last_p_id > 1:
+                self.logger.warning('{} missing packet(s) before ID:{}'
+                                    .format(p_id - self.last_p_id - 1, p_id))
+            self.last_p_id = p_id
+            self.notify_data_available()
 
-                if self.last_p_id and p_id - self.last_p_id > 1:
-                    self.logger.warning('{} missing packet(s) before ID:{}'
-                                        .format(p_id - self.last_p_id - 1, p_id))
-                self.last_p_id = p_id
-                self.notify_data_available()
-        except Exception as e:
-            self.logger.error(e)
+            if not self.is_running():
+                break
 
     def update(self, data):
         if self.plot.request_plot_update():

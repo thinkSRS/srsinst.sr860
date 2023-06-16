@@ -20,11 +20,8 @@ class SimulatedPlotTask(Task):
 
     def test(self):
         while True:
-            if not self.is_running():
-                break
-
             r, th = self.calc_chunk()
-            time.sleep(0.001)
+            self.delay(0.001)
 
             x = r * np.sin(th)
             y = r * np.cos(th)

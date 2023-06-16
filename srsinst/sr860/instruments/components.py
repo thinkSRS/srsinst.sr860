@@ -52,22 +52,24 @@ class Reference(Component):
         Keys.R50Ohms: 0,
         Keys.R1Meg: 1
     }
-    timebase_mode = DictCommand('TBMODE', TimebaseModeDict)
-    timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
-    
-    phase = FloatCommand('PHAS', unit='deg', min=-360000, max=360000, step=0.000001,
-                                 significant_figures=7, default_value=0.0)
 
-    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
-    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 10, 1000.0)
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+
     external_frequency = FloatGetCommand('FREQEXT', 'Hz')
     detection_frequency = FloatGetCommand('FREQDET', 'Hz')
 
+    phase = FloatCommand('PHAS', unit='°', min=-360000, max=360000, step=0.000001,
+                                 significant_figures=7, default_value=0.0)
+
     harmonic = IntCommand('HARM', '', 1, 99)
     harmonic_dual = IntCommand('HARMDUAL', '', 1, 99)
-    
+
+    timebase_mode = DictCommand('TBMODE', TimebaseModeDict)
+    timebase_source = DictCommand('TBSTAT', TimebaseSourceDict)
+
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict, None, 'slots')
-    blade_phase = FloatCommand('BLADEPHASE', 'degree')
+    blade_phase = FloatCommand('BLADEPHASE', '°')
     
     sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 4, 0.0)
     sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 4, 0.0)
@@ -77,12 +79,36 @@ class Reference(Component):
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
+    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, 4e6, 0.0001)
     sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
     sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
 
     def auto_phase(self):
         self.comm.send('APHS')
+
+    allow_run_button = [auto_phase]
+
+
+class Reference2M(Reference):
+    """
+    Reference class for SR865
+    """
+    MaxFrequency = 2000000.0
+
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+    # frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
+
+
+class Reference4M(Reference):
+    """
+    Reference class for SR865A
+    """
+    MaxFrequency = 4000000.0
+
+    frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+    internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
+    # frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
 
 
 class Signal(Component):
@@ -146,12 +172,12 @@ class Signal(Component):
     voltage_input_coupling = DictCommand('ICPL', VoltageInputCouplingDict)
 
     voltage_input_shield = DictCommand('IGND', VoltageInputShieldDict)
-    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict, unit='V', fmt='{:0e}')
-    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict, unit='V', fmt='{:0e}')
+    voltage_input_range = DictCommand('IRNG', VoltageInputRangeDict, unit='V')
+    voltage_sensitivity = DictCommand('SCAL', VoltageSensitivityDict, unit='V')
     
-    current_input_gain = DictCommand('ICUR', CurrentInputGainDict, unit='Ohm', fmt='{:0e}')
-    current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict, unit='A', fmt='{:0e}')
-    time_constant = DictCommand('OFLT', TimeConstantDict, unit='s', fmt='{:0e}')
+    current_input_gain = DictCommand('ICUR', CurrentInputGainDict, unit='Ohm', fmt='.0e')
+    current_sensitivity = DictCommand('SCAL', CurrentSensitivityDict, unit='A')
+    time_constant = DictCommand('OFLT', TimeConstantDict, unit='s')
 
     strength_indicator = IntGetCommand('ILVL')
     filter_slope = DictCommand('OFSL', FilterSlopeDict, unit='dB/oct')
@@ -211,6 +237,8 @@ class Auto(Component):
 
     def set_scale(self):
         self.comm.send('ASCL')
+
+    allow_run_button = [set_phase, set_range, set_scale]
 
 
 class Display(Component):
@@ -417,17 +445,18 @@ class Scan(Component):
     parameter = DictCommand('SCNPAR', ParameterDict)
     scale = DictCommand('SCNLOG', ScaleDict)
     end_mode = DictCommand('SCNEND', EndDict)
-    period = FloatCommand('SCNSEC')
+    period = FloatCommand('SCNSEC', 's')
     amplitude_attenuation_mode = DictCommand('SCNAMPATTN', AttenuationDict)
     offset_attenuation_mode = DictCommand('SCNDCATTN', AttenuationDict)
-    interval = DictCommand('SCNINRVL', IntervalDict)
+    interval = DictCommand('SCNINRVL', IntervalDict, None, 's')
     enable = BoolCommand('SCNENBL')
     state = DictGetCommand('SCNSTATE', StateDict)
-    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, RangeDict)
-    amplitude_range = FloatIndexCommand('SCNAMP', 1, 0, RangeDict)
-    offset_range = FloatIndexCommand('SCNDC', 1, 0, RangeDict)
-    aux_out1_range = FloatIndexCommand('SCNAUX1', 1, 0, RangeDict)
-    aux_out2_range = FloatIndexCommand('SCNAUX2', 1, 0, RangeDict)
+    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, RangeDict, 'Hz', 0.001, Reference.MaxFrequency, 0.0001, 6, 100000.0)
+    amplitude_range = FloatIndexCommand('SCNAMP', 1, 0, RangeDict, 'V', 0, 2.0, 1e-9, 4, 0.0)
+    offset_range = FloatIndexCommand('SCNDC', 1, 0, RangeDict, 'V', -5.0, 5.0, 1e-4, 4, 0.0)
+    aux_out1_range = FloatIndexCommand('SCNAUX1', 1, 0, RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
+    aux_out2_range = FloatIndexCommand('SCNAUX2', 1, 0, RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
+
 
     def start(self):
         self.comm.send('SCNRUN')
@@ -437,6 +466,16 @@ class Scan(Component):
 
     def reset(self):
         self.comm.send('SCNRST')
+
+    allow_run_button = [start, pause, reset]
+
+
+class Scan2M(Scan):
+    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference2M.MaxFrequency, 0.0001, 6, 100000.0)
+
+
+class Scan4M(Scan):
+    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference4M.MaxFrequency, 0.0001, 6, 100000.0)
 
 
 class DataTransfer(Component):
@@ -749,20 +788,20 @@ class Status(Component):
     def get_status_text(self):
         msg = ''
         status_byte = self.serial_poll
-        if self.SerialPollStatusBitDict[Keys.ERR]:
-            err = self.error
+        err = self.error
+        if err:
             for key, val in self.ErrorStatusBitDict.items():
                 if 2 ** val & err:
                     msg += 'Error bit {}, {} is set, '.format(val, key)
 
-        if self.SerialPollStatusBitDict[Keys.LIA]:
-            lia = self.lock_in
+        lia = self.lock_in
+        if lia:
             for key, val in self.LiaStatusBitDict.items():
                 if 2 ** val & lia:
                     msg += 'LIA status bit {}, {} is set, '.format(val, key)
 
-        if self.SerialPollStatusBitDict[Keys.ESB]:
-            event = self.event
+        event = self.event
+        if event:
             for key, val in self.EventStatusBitDict.items():
                 if 2 ** val & event:
                     msg += 'Event status bit {}, {} is set, '.format(val, key)

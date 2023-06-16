@@ -4,12 +4,11 @@
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
  SR860, SR865 and SR865A.
 
-![SR860 GUI screenshot](images/SR860_screenshot.png "  ")
+![screenshot](https://github.com/thinkSRS/srsinst.sr860/blob/main/docs/_static/image/SR860_screenshot.png?raw=true " ")
 
 ## Installation
-You should have a working Python with `pip` (Python package installer) 
-installed. If you don't,
-[install Python 3](https://realpython.com/installing-python/) to your system.
+You need a working Python 3.7 or later with `pip` (Python package installer) 
+installed. If you don't, [install Python](https://www.python.org/) to your system.
 
 To install `srsinst.sr860` as an instrument driver , use Python package installer `pip` from the command line.
 
@@ -49,9 +48,7 @@ to write a Python script.
 * import the **SR860** class from `sr860` package.
 * Instantiate **SR860** to connect to an SR860 unit.
 
-
 |
-
 
     C:\>python
     Python 3.8.3 (tags/v3.8.3:6f8c832, May 13 2020, 22:37:02) [MSC v.1924 64 bit (AMD64)] on win32
@@ -62,7 +59,7 @@ to write a Python script.
     Stanford_Research_Systems,SR865A,002725,v1.34
     
 
-**SR860** is comprised of multiple sub-components, their associated commands and class methods.
+**SR860** comprises multiple subcomponents, their associated commands and class methods.
  **Component** class has a convenience attribute `dir` to show its  available attributes 
  and methods in the Python dictionary format.
 
@@ -83,7 +80,7 @@ the programming chapter (Chapter 4) in the
 for easy reference.
 
 ## Configure SR860 components
-Let's configure the signal components. It has no sub-components, and no associated 
+Let's configure the signal components. It has no subcomponents, and no associated 
 class methods. Only commands are available.
 
     >>> lockin.signal.dir

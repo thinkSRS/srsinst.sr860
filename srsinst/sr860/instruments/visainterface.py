@@ -66,6 +66,11 @@ class VisaInterface(Interface):
     def _send(self, cmd):
         self._visa.write(cmd)
 
+    def _write_binary(self, binary_array):
+        if type(binary_array) not in (bytes, bytearray):
+            raise TypeError('_write_binary requires bytes or bytearray')
+        self._visa.write_raw(binary_array)
+
     def _recv(self):
         reply = self._visa.read()
         return reply
