@@ -14,7 +14,6 @@ class ScanAuxOut1Task(ScanFrequencyTask):
     ScanParameter = Keys.AuxOutput1
     ScanBeginCommand = 'scan.aux_out1_range["begin"]'
     ScanEndCommand = 'scan.aux_out1_range["end"]'
-    ScanCommandInstance = Scan.aux_out1_range
 
     InstName = 'inst to change'
     ScanScale = 'Scan Scale'
@@ -26,10 +25,10 @@ class ScanAuxOut1Task(ScanFrequencyTask):
 
     input_parameters = {
         InstName:     InstrumentInput(),
-        ScanScale:    CommandInput('scan.scale', Scan.scale),
-        ScanEndMode:  CommandInput('scan.end_mode', Scan.end_mode),
-        ScanPeriod:   CommandInput('scan.period', Scan.period),
-        ScanInterval: CommandInput('scan.interval', Scan.interval),
-        ScanBegin:    CommandInput(ScanBeginCommand, ScanCommandInstance),
-        ScanEnd:      CommandInput(ScanEndCommand, ScanCommandInstance),
+        ScanScale:    CommandInput('scan.scale'),
+        ScanEndMode:  CommandInput('scan.end_mode'),
+        ScanPeriod:   CommandInput('scan.period'),
+        ScanInterval: CommandInput('scan.interval'),
+        ScanBegin:    CommandInput(ScanBeginCommand),
+        ScanEnd:      CommandInput(ScanEndCommand),
     }

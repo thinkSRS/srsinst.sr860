@@ -18,10 +18,10 @@ Sine output is generated based on the frequency of the selected reference source
     SineDCMode = 'sine dc mode'
 
     input_parameters = {
-        InstName:  InstrumentInput(),
-        SineAmplitude: CommandInput('ref.sine_out_amplitude', Reference.sine_out_amplitude),
-        SineOffset: CommandInput('ref.sine_out_offset', Reference.sine_out_offset),
-        SineDCMode: CommandInput('ref.sine_out_dc_mode', Reference.sine_out_dc_mode),
+        InstName:      InstrumentInput(),
+        SineAmplitude: CommandInput('ref.sine_out_amplitude'),
+        SineOffset:    CommandInput('ref.sine_out_offset'),
+        SineDCMode:    CommandInput('ref.sine_out_dc_mode'),
     }
 
     def setup(self):

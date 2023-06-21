@@ -15,7 +15,6 @@ class ScanFrequencyTask(Task):
     ScanParameter = Keys.InternalFrequency
     ScanBeginCommand = 'scan.frequency_range["begin"]'
     ScanEndCommand = 'scan.frequency_range["end"]'
-    ScanCommandInstance = Scan.frequency_range
 
     InstName = 'inst to change'
     ScanScale = 'Scan Scale'
@@ -27,12 +26,12 @@ class ScanFrequencyTask(Task):
 
     input_parameters = {
         InstName:     InstrumentInput(),
-        ScanScale:    CommandInput('scan.scale', Scan.scale),
-        ScanEndMode:  CommandInput('scan.end_mode', Scan.end_mode),
-        ScanPeriod:   CommandInput('scan.period', Scan.period),
-        ScanInterval: CommandInput('scan.interval', Scan.interval),
-        ScanBegin:    CommandInput(ScanBeginCommand, ScanCommandInstance),
-        ScanEnd:      CommandInput(ScanEndCommand, ScanCommandInstance),
+        ScanScale:    CommandInput('scan.scale'),
+        ScanEndMode:  CommandInput('scan.end_mode'),
+        ScanPeriod:   CommandInput('scan.period'),
+        ScanInterval: CommandInput('scan.interval'),
+        ScanBegin:    CommandInput(ScanBeginCommand),
+        ScanEnd:      CommandInput(ScanEndCommand),
     }
 
     def setup(self):

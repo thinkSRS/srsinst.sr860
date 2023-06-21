@@ -8,4 +8,4 @@ from .instruments.keys import Keys
 
 from .instruments.get_instruments import get_sr860
 
-__version__ = "0.0.21"
+__version__ = "0..22"

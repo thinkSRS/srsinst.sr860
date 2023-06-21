@@ -1,4 +1,5 @@
 
+import time
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
 from srsinst.sr860 import SR860, get_sr860
@@ -22,14 +23,13 @@ SR530 chopper connected to the aux output channel 4 in the rear panel.
     RunAutoPhase = "run auto phase"
 
     input_parameters = {
-        InstName: InstrumentInput(),
-        InternalFrequency: CommandInput('ref.internal_frequency', Reference.internal_frequency),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonic: CommandInput('ref.harmonic', Reference.harmonic),
-
-        BladeSlots: CommandInput('ref.blade_slots', Reference.blade_slots),
-        BladePhase: CommandInput('ref.blade_phase', Reference.blade_phase),
-        RunAutoPhase: BoolInput()
+        InstName:          InstrumentInput(),
+        InternalFrequency: CommandInput('ref.internal_frequency'),
+        Phase:             CommandInput('ref.phase'),
+        Harmonic:          CommandInput('ref.harmonic'),
+        BladeSlots:        CommandInput('ref.blade_slots'),
+        BladePhase:        CommandInput('ref.blade_phase'),
+        RunAutoPhase:      BoolInput()
     }
 
     def setup(self):

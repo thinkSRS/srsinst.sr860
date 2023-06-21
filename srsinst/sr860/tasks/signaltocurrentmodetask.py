@@ -22,12 +22,12 @@ Make sure the signal is connected to the current input connector on the front pa
 
     input_parameters = {
         InstName:       InstrumentInput(),
-        InputGain:      CommandInput('signal.current_input_gain', Signal.current_input_gain),
-        Sensitivity:    CommandInput('signal.current_sensitivity', Signal.current_sensitivity),
-        TimeConstant:   CommandInput('signal.time_constant', Signal.time_constant),
-        FilterSlope:    CommandInput('signal.filter_slope', Signal.filter_slope),
-        SyncFilter:     CommandInput('signal.sync_filter', Signal.sync_filter),
-        AdvancedFilter: CommandInput('signal.advanced_filter', Signal.advanced_filter)
+        InputGain:      CommandInput('signal.current_input_gain'),
+        Sensitivity:    CommandInput('signal.current_sensitivity'),
+        TimeConstant:   CommandInput('signal.time_constant'),
+        FilterSlope:    CommandInput('signal.filter_slope'),
+        SyncFilter:     CommandInput('signal.sync_filter'),
+        AdvancedFilter: CommandInput('signal.advanced_filter'),
     }
 
     def setup(self):

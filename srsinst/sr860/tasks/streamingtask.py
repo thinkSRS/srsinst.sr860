@@ -19,12 +19,12 @@ class StreamingTask(Task):
     Port = 'udp port'
 
     input_parameters = {
-        Duration: IntegerInput(3600, ' s', 1, 360000, 1),
-        Channels: ListInput(list(DataStream.ChannelDict.keys()), 1),
+        Duration:   IntegerInput(3600, ' s', 1, 360000, 1),
+        Channels:   ListInput(list(DataStream.ChannelDict.keys()), 1),
         DataFormat: ListInput(list(DataStream.FormatDict.keys())),
         PacketSize: IntegerListInput([1024, 512, 256, 128]),
-        Rate: IntegerInput(4, '  (2^n) ', 0, 20, 1),
-        Port: IntegerInput(1865, '', 1024, 65535, 1)
+        Rate:       IntegerInput(4, '  (2^n) ', 0, 20, 1),
+        Port:       IntegerInput(1865, '', 1024, 65535, 1)
     }
 
     def setup(self):

@@ -19,7 +19,7 @@ class ScanRefAmplitudeTask(ScanFrequencyTask):
     ScanAttenuationInstance = Scan.amplitude_attenuation_mode
     ScanBeginCommand = 'scan.amplitude_range["begin"]'
     ScanEndCommand = 'scan.amplitude_range["end"]'
-    ScanCommandInstance = Scan.amplitude_range
+    # ScanCommandInstance = Scan.amplitude_range
 
     InstName = 'inst to change'
     ScanScale = 'Scan Scale'
@@ -31,12 +31,12 @@ class ScanRefAmplitudeTask(ScanFrequencyTask):
     ScanEnd = 'Scan End Value (V)'
 
     input_parameters = {
-        InstName:     InstrumentInput(),
-        ScanScale:    CommandInput('scan.scale', Scan.scale),
-        ScanEndMode:  CommandInput('scan.end_mode', Scan.end_mode),
-        ScanPeriod:   CommandInput('scan.period', Scan.period),
-        ScanAttenuation: CommandInput(ScanAttenuationCommand, ScanAttenuationInstance),
-        ScanInterval: CommandInput('scan.interval', Scan.interval),
-        ScanBegin:    CommandInput(ScanBeginCommand, ScanCommandInstance),
-        ScanEnd:      CommandInput(ScanEndCommand, ScanCommandInstance),
+        InstName:        InstrumentInput(),
+        ScanScale:       CommandInput('scan.scale'),
+        ScanEndMode:     CommandInput('scan.end_mode'),
+        ScanPeriod:      CommandInput('scan.period'),
+        ScanAttenuation: CommandInput(ScanAttenuationCommand),
+        ScanInterval:    CommandInput('scan.interval'),
+        ScanBegin:       CommandInput(ScanBeginCommand),
+        ScanEnd:         CommandInput(ScanEndCommand),
     }

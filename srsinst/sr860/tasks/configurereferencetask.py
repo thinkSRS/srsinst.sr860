@@ -30,21 +30,21 @@ Adjust values and press the Apply button.
     TriggerInput = 'trigger input'
 
     input_parameters = {
-        InstName:       InstrumentInput(),
-        TimebaseMode:   CommandInput('ref.timebase_mode', Reference.timebase_mode),
-        TimebaseSource: CommandInput('ref.timebase_source', Reference.timebase_source),
-        InternalFrequency: CommandInput('ref.internal_frequency', Reference.internal_frequency),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonics: CommandInput('ref.harmonics', Reference.harmonics),
-        HarmonicsDual: CommandInput('ref.harmonics_dual', Reference.harmonics_dual),
-        BladeSlots: CommandInput('ref.blade_slots', Reference.blade_slots),
-        BladePhase: CommandInput('ref.blade_phase', Reference.blade_phase),
-        SineAmplitude: CommandInput('ref.sine_out_amplitude', Reference.sine_out_amplitude),
-        SineOffset: CommandInput('ref.sine_out_offset', Reference.sine_out_offset),
-        SineDCMode: CommandInput('ref.sine_out_dc_mode', Reference.sine_out_dc_mode),
-        ReferenceSource: CommandInput('ref.reference_source', Reference.reference_source),
-        TriggerMode: CommandInput('ref.trigger_mode', Reference.trigger_mode),
-        TriggerInput: CommandInput('ref.trigger_input', Reference.trigger_input),
+        InstName:          InstrumentInput(),
+        TimebaseMode:      CommandInput('ref.timebase_mode'),
+        TimebaseSource:    CommandInput('ref.timebase_source'),
+        InternalFrequency: CommandInput('ref.internal_frequency'),
+        Phase:             CommandInput('ref.phase'),
+        Harmonics:         CommandInput('ref.harmonics'),
+        HarmonicsDual:     CommandInput('ref.harmonics_dual'),
+        BladeSlots:        CommandInput('ref.blade_slots'),
+        BladePhase:        CommandInput('ref.blade_phase'),
+        SineAmplitude:     CommandInput('ref.sine_out_amplitude'),
+        SineOffset:        CommandInput('ref.sine_out_offset'),
+        SineDCMode:        CommandInput('ref.sine_out_dc_mode'),
+        ReferenceSource:   CommandInput('ref.reference_source'),
+        TriggerMode:       CommandInput('ref.trigger_mode'),
+        TriggerInput:      CommandInput('ref.trigger_input'),
     }
 
     def setup(self):

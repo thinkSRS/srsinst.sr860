@@ -18,11 +18,11 @@ Change the reference source to the internal oscillator.
     RunAutoPhase = "run auto phase"
 
     input_parameters = {
-        InstName:       InstrumentInput(),
-        InternalFrequency: CommandInput('ref.internal_frequency', Reference.internal_frequency),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonic: CommandInput('ref.harmonic', Reference.harmonic),
-        RunAutoPhase: BoolInput()
+        InstName:          InstrumentInput(),
+        InternalFrequency: CommandInput('ref.internal_frequency'),
+        Phase:             CommandInput('ref.phase'),
+        Harmonic:          CommandInput('ref.harmonic'),
+        RunAutoPhase:      BoolInput()
     }
 
     def setup(self):

@@ -21,13 +21,13 @@ Change the reference source to the dual mode.
     HarmonicsDual = 'harmonic dual'
 
     input_parameters = {
-        InstName: InstrumentInput(),
-        InternalFrequency: CommandInput('ref.internal_frequency', Reference.internal_frequency),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonic: CommandInput('ref.harmonic', Reference.harmonic),
-        TriggerMode: CommandInput('ref.trigger_mode', Reference.trigger_mode),
-        TriggerInput: CommandInput('ref.trigger_input', Reference.trigger_input),
-        HarmonicsDual: CommandInput('ref.harmonic_dual', Reference.harmonic_dual),
+        InstName:          InstrumentInput(),
+        InternalFrequency: CommandInput('ref.internal_frequency'),
+        Phase:             CommandInput('ref.phase'),
+        Harmonic:          CommandInput('ref.harmonic'),
+        TriggerMode:       CommandInput('ref.trigger_mode'),
+        TriggerInput:      CommandInput('ref.trigger_input'),
+        HarmonicsDual:     CommandInput('ref.harmonic_dual'),
     }
 
     def setup(self):

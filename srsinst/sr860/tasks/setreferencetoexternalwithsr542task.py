@@ -33,14 +33,14 @@ Change the reference source of SR860 to the external and .
     BladePhase = 'blade phase'
 
     input_parameters = {
-        InstName: InstrumentInput(0),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonic: CommandInput('ref.harmonic', Reference.harmonic),
+        InstName:      InstrumentInput(0),
+        Phase:         CommandInput('ref.phase'),
+        Harmonic:      CommandInput('ref.harmonic'),
 
-        ChopperName: InstrumentInput(1),
-        ControlTarget: CommandInput('config.control_target', Config.control_target),
-        InternalF: CommandInput('config.frequency', Config.frequency),
-        BladePhase: CommandInput('config.phase', Config.phase),
+        ChopperName:   InstrumentInput(1),
+        ControlTarget: CommandInput('config.control_target'),
+        InternalF:     CommandInput('config.frequency'),
+        BladePhase:    CommandInput('config.phase'),
     }
 
     def setup(self):

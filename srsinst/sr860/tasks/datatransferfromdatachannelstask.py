@@ -23,10 +23,10 @@ class DataTransferFromDataChannelsTask(Task):
 
     input_parameters = {
         InstName: InstrumentInput(),
-        Channel1: CommandInput('display.config[0]', Display.config),
-        Channel2: CommandInput('display.config[1]', Display.config),
-        Channel3: CommandInput('display.config[2]', Display.config),
-        Channel4: CommandInput('display.config[3]', Display.config),
+        Channel1: CommandInput('display.config[0]'),
+        Channel2: CommandInput('display.config[1]'),
+        Channel3: CommandInput('display.config[2]'),
+        Channel4: CommandInput('display.config[3]'),
         Delay: FloatInput(0.1, ' s', 0.0, 600, 0.1),
         DateTime: BoolInput(['Seconds', 'Date time'])
     }

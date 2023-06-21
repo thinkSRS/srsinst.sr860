@@ -22,10 +22,10 @@ even without running the task.
 
     input_parameters = {
         InstName: InstrumentInput(),
-        Ch1:      CommandInput(f'aux.output[0]', Aux.output),
-        Ch2:      CommandInput(f'aux.output[1]', Aux.output),
-        Ch3:      CommandInput(f'aux.output[2]', Aux.output),
-        Ch4:      CommandInput(f'aux.output[3]', Aux.output),
+        Ch1:      CommandInput(f'aux.output[0]'),
+        Ch2:      CommandInput(f'aux.output[1]'),
+        Ch3:      CommandInput(f'aux.output[2]'),
+        Ch4:      CommandInput(f'aux.output[3]'),
     }
 
     def setup(self):

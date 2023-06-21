@@ -21,7 +21,7 @@ without an external 10 MHz clock will automatically run with the internal oscill
 
     input_parameters = {
         InstName:       InstrumentInput(),
-        TimebaseSource: CommandInput('ref.timebase_source', Reference.timebase_source),
+        TimebaseSource: CommandInput('ref.timebase_source'),
     }
 
     def setup(self):

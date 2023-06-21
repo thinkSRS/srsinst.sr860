@@ -1,4 +1,5 @@
 
+import time
 from srsgui import Task
 from srsgui import BoolInput, IntegerListInput, FloatListInput, InstrumentInput, CommandInput
 from srsinst.sr860 import SR860, get_sr860
@@ -19,11 +20,11 @@ Change the reference source to the external.
     RunAutoPhase = "run auto phase"
 
     input_parameters = {
-        InstName: InstrumentInput(),
-        TriggerMode: CommandInput('ref.trigger_mode', Reference.trigger_mode),
-        TriggerInput: CommandInput('ref.trigger_input', Reference.trigger_input),
-        Phase: CommandInput('ref.phase', Reference.phase),
-        Harmonic: CommandInput('ref.harmonic', Reference.harmonic),
+        InstName:     InstrumentInput(),
+        TriggerMode:  CommandInput('ref.trigger_mode'),
+        TriggerInput: CommandInput('ref.trigger_input'),
+        Phase:        CommandInput('ref.phase'),
+        Harmonic:     CommandInput('ref.harmonic'),
         RunAutoPhase: BoolInput()
     }
 

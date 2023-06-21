@@ -79,9 +79,12 @@ class Reference(Component):
     trigger_mode = DictCommand('RTRG', TriggerModeDict)
     trigger_input = DictCommand('REFZ', TriggerInputDict)
 
-    frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, 4e6, 0.0001)
-    sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
-    sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, 4e6, 0.0001)
+        self.sine_out_amplitude_preset = FloatIndexCommand('PSTA', 3, 0, None, " V", 0, 2.0, 1e-9)
+        self.sine_out_offset_preset = FloatIndexCommand('PSTL', 3, 0, None, " V", -5.0, 5.0, 1e-4)
+        self.add_parent_to_index_commands()
 
     def auto_phase(self):
         self.comm.send('APHS')
@@ -97,7 +100,11 @@ class Reference2M(Reference):
 
     frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
     internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
-    # frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, Reference2M.MaxFrequency, 0.0001)
+        self.add_parent_to_index_commands()
 
 
 class Reference4M(Reference):
@@ -108,7 +115,11 @@ class Reference4M(Reference):
 
     frequency = FloatCommand('FREQ', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
     internal_frequency = FloatCommand('FREQINT', 'Hz', 0.001, MaxFrequency, 0.0001, 6, 1000.0)
-    # frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, MaxFrequency, 0.0001)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        frequency_preset = FloatIndexCommand('PSTF', 3, 0, None, "Hz", 0.001, Reference4M.MaxFrequency, 0.0001)
+        self.add_parent_to_index_commands()
 
 
 class Signal(Component):
@@ -206,11 +217,14 @@ class Output(Component):
         100: 2
     }
 
-    type = DictIndexCommand('COUT', TypeDict, 1, 0, ChannelDict)
-    expand = DictIndexCommand('CEXP', ExpandDict, 2, 0, IndexDict)
-    offset = BoolIndexCommand('COFA', 2, 0, IndexDict)
-    offset_percent = FloatIndexCommand('COFP', 2, 0, IndexDict)
-    ratio_mode = BoolIndexCommand('CRAT', 2, 0, IndexDict)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.type = DictIndexCommand('COUT', Output.TypeDict, 1, 0, Output.ChannelDict)
+        self.expand = DictIndexCommand('CEXP', Output.ExpandDict, 2, 0, Output.IndexDict)
+        self.offset = BoolIndexCommand('COFA', 2, 0, Output.IndexDict)
+        self.offset_percent = FloatIndexCommand('COFP', 2, 0, Output.IndexDict)
+        self.ratio_mode = BoolIndexCommand('CRAT', 2, 0, Output.IndexDict)
+        self.add_parent_to_index_commands()
 
     def auto_offset(self, index):
         self.comm.send('OAUT {}'.format(index))
@@ -224,8 +238,11 @@ class Aux(Component):
         Keys.Channel4: 3
     }
 
-    input = FloatIndexGetCommand('OAUX', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
-    output = FloatIndexCommand('AUXV', 3, 0, ChannelDict, ' V', -10.5, 10.5, 1e-3)
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.input = FloatIndexGetCommand('OAUX', 3, 0, Aux.ChannelDict, ' V', -10.5, 10.5, 1e-3)
+        self.output = FloatIndexCommand('AUXV', 3, 0, Aux.ChannelDict, ' V', -10.5, 10.5, 1e-3)
+        self.add_parent_to_index_commands()
 
 
 class Auto(Component):
@@ -278,8 +295,12 @@ class Display(Component):
 
     blank = BoolCommand('DBLK')
     layout = DictCommand('DLAY', LayoutDict)
-    config = DictIndexCommand('CDSP', ParameterDict, 3, 0, ChannelDict)
-    graph_enable = BoolIndexCommand('CGRF', 3, 0, ChannelDict)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.config = DictIndexCommand('CDSP', Display.ParameterDict, 3, 0, Display.ChannelDict)
+        self.graph_enable = BoolIndexCommand('CGRF', 3, 0, Display.ChannelDict)
+        self.add_parent_to_index_commands()
 
     def get_screen(self):
         raise NotImplemented('get_screen() is not implemented')
@@ -329,21 +350,24 @@ class Chart(Component):
     }
 
     time_division = DictCommand('GSPD', TimeDivDict)
-    vertical_division = FloatIndexCommand('GSCL', 3, 0, ChannelDict)
-    vertical_offset = FloatIndexCommand('GOFF', 3, 0, ChannelDict)
-    enable = BoolIndexCommand('CGRF', 3, 0, ChannelDict)
     live = BoolCommand('GLIV')
     cursor_position = IntCommand('PCUR')
     cursor_relative = BoolCommand('CURREL')
     cursor_display_mode = DictCommand('CURDISP', CursorDisplayModeDict)
     cursor_readout_mode = DictCommand('CURBUG', CursorReadoutModeDict)
     cursor_width = DictCommand('FCRW', CursorWidthDict)
-    cursor_value = FloatIndexGetCommand('SCRY', 4, 0, CursorValueDict)
     cursor_date_time = GetCommand('CURDATTIM')
     cursor_interval_time = GetCommand('CURINTERVAL')
 
     exclude_capture = [cursor_date_time, cursor_interval_time]
 
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.vertical_division = FloatIndexCommand('GSCL', 3, 0, Chart.ChannelDict)
+        self.vertical_offset = FloatIndexCommand('GOFF', 3, 0, Chart.ChannelDict)
+        self.enable = BoolIndexCommand('CGRF', 3, 0, Chart.ChannelDict)
+        self.cursor_value = FloatIndexGetCommand('SCRY', 4, 0, Chart.CursorValueDict)
+        self.add_parent_to_index_commands()
     def auto_scal(self, channel):
         self.comm.send(f'GACT {channel}')
 
@@ -451,12 +475,15 @@ class Scan(Component):
     interval = DictCommand('SCNINRVL', IntervalDict, None, 's')
     enable = BoolCommand('SCNENBL')
     state = DictGetCommand('SCNSTATE', StateDict)
-    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, RangeDict, 'Hz', 0.001, Reference.MaxFrequency, 0.0001, 6, 100000.0)
-    amplitude_range = FloatIndexCommand('SCNAMP', 1, 0, RangeDict, 'V', 0, 2.0, 1e-9, 4, 0.0)
-    offset_range = FloatIndexCommand('SCNDC', 1, 0, RangeDict, 'V', -5.0, 5.0, 1e-4, 4, 0.0)
-    aux_out1_range = FloatIndexCommand('SCNAUX1', 1, 0, RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
-    aux_out2_range = FloatIndexCommand('SCNAUX2', 1, 0, RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
 
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference.MaxFrequency, 0.0001, 6, 100000.0)
+        self.amplitude_range = FloatIndexCommand('SCNAMP', 1, 0, Scan.RangeDict, 'V', 0, 2.0, 1e-9, 4, 0.0)
+        self.offset_range = FloatIndexCommand('SCNDC', 1, 0, Scan.RangeDict, 'V', -5.0, 5.0, 1e-4, 4, 0.0)
+        self.aux_out1_range = FloatIndexCommand('SCNAUX1', 1, 0, Scan.RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
+        self.aux_out2_range = FloatIndexCommand('SCNAUX2', 1, 0, Scan.RangeDict, 'V', -10.5, 10.5, 1e-3, 4, 0.0)
+        self.add_parent_to_index_commands()
 
     def start(self):
         self.comm.send('SCNRUN')
@@ -471,19 +498,27 @@ class Scan(Component):
 
 
 class Scan2M(Scan):
-    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference2M.MaxFrequency, 0.0001, 6, 100000.0)
-
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference2M.MaxFrequency, 0.0001, 6, 100000.0)
+        self.add_parent_to_indexcommands()
 
 class Scan4M(Scan):
-    frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference4M.MaxFrequency, 0.0001, 6, 100000.0)
-
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference4M.MaxFrequency, 0.0001, 6, 100000.0)
+        self.add_parent_to_index_commands()
 
 class DataTransfer(Component):
     ChannelDict = Display.ChannelDict
     ParameterDict = Display.ParameterDict
-    channel_config = DictIndexCommand('CDSP', ParameterDict, 3, 0, ChannelDict)
-    channel_value = FloatIndexGetCommand('OUTR', 3, 0, ChannelDict)
-    value = FloatIndexGetCommand('OUTP', 16, 0, ParameterDict)
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.channel_config = DictIndexCommand('CDSP', DataTransfer.ParameterDict, 3, 0, DataTransfer.ChannelDict)
+        self.channel_value = FloatIndexGetCommand('OUTR', 3, 0, DataTransfer.ChannelDict)
+        self.value = FloatIndexGetCommand('OUTP', 16, 0, DataTransfer.ParameterDict)
+        self.add_parent_to_index_commands()
 
     def get_values(self, p1, p2, p3=None):
         if p3:
@@ -756,31 +791,32 @@ class Status(Component):
         Keys.DataCh4Scale: 11,
     }
 
-    serial_poll_enable_bit = BoolIndexCommand('*SRE', 7, 0, SerialPollStatusBitDict)
+
     serial_poll_enable = IntCommand('*SRE')
-    serial_poll_bit = BoolIndexGetCommand('*STB', 7, 0, SerialPollStatusBitDict)
     serial_poll = IntGetCommand('*STB')
-
-    error_enable_bit = BoolIndexCommand('ERRE', 7, 0, ErrorStatusBitDict)
     error_enable = IntCommand('ERRE')
-    error_bit = BoolIndexGetCommand('ERRS', 7, 0, ErrorStatusBitDict)
     error = IntGetCommand('ERRS')
-
-    lock_in_enable_bit = BoolIndexCommand('LIAE', 14, 0, LiaStatusBitDict)
     lock_in_enable = IntCommand('LIAE')
-    lock_in_bit = BoolIndexGetCommand('LIAS', 14, 0, LiaStatusBitDict)
     lock_in = IntGetCommand('LIAS')
-
-    event_enable_bit = BoolIndexCommand('*ESE', 7, 0, EventStatusBitDict)
     event_enable = IntCommand('*ESE')
-    event_bit = BoolIndexGetCommand('*ESR', 7, 0, EventStatusBitDict)
     event = IntGetCommand('*ESR')
-
     power_on_status_clear_bit = BoolCommand('*PSC')
     overload = IntGetCommand('CUROVLDSTAT')
 
-    exclude_capture = [event_enable_bit, serial_poll_enable_bit,
-                       error_enable_bit, lock_in_enable_bit]
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.serial_poll_enable_bit = BoolIndexCommand('*SRE', 7, 0, Status.SerialPollStatusBitDict)
+        self.serial_poll_bit = BoolIndexGetCommand('*STB', 7, 0, Status.SerialPollStatusBitDict)
+        self.error_enable_bit = BoolIndexCommand('ERRE', 7, 0, Status.ErrorStatusBitDict)
+        self.error_bit = BoolIndexGetCommand('ERRS', 7, 0, Status.ErrorStatusBitDict)
+        self.lock_in_enable_bit = BoolIndexCommand('LIAE', 14, 0, Status.LiaStatusBitDict)
+        self.lock_in_bit = BoolIndexGetCommand('LIAS', 14, 0, Status.LiaStatusBitDict)
+        self.event_enable_bit = BoolIndexCommand('*ESE', 7, 0, Status.EventStatusBitDict)
+        self.event_bit = BoolIndexGetCommand('*ESR', 7, 0, Status.EventStatusBitDict)
+        self.add_parent_to_index_commands()
+
+        self.exclude_capture = [self.event_enable_bit, self.serial_poll_enable_bit,
+                                self.error_enable_bit, self.lock_in_enable_bit]
 
     def clear(self):
         self.comm.send('*CLS')

@@ -16,10 +16,8 @@ class ScanRefOffsetTask(ScanFrequencyTask):
     ScanName = 'Reference Offset'
     ScanParameter = Keys.ReferenceAmplitude
     ScanAttenuationCommand = 'scan.offset_attenuation_mode'
-    ScanAttenuationInstance = Scan.offset_attenuation_mode
     ScanBeginCommand = 'scan.offset_range["begin"]'
     ScanEndCommand = 'scan.offset_range["end"]'
-    ScanCommandInstance = Scan.offset_range
 
     InstName = 'inst to change'
     ScanScale = 'Scan Scale'
@@ -31,12 +29,12 @@ class ScanRefOffsetTask(ScanFrequencyTask):
     ScanEnd = 'Scan End Value (V)'
 
     input_parameters = {
-        InstName:     InstrumentInput(),
-        ScanScale:    CommandInput('scan.scale', Scan.scale),
-        ScanEndMode:  CommandInput('scan.end_mode', Scan.end_mode),
-        ScanPeriod:   CommandInput('scan.period', Scan.period),
-        ScanAttenuation: CommandInput(ScanAttenuationCommand, ScanAttenuationInstance),
-        ScanInterval: CommandInput('scan.interval', Scan.interval),
-        ScanBegin:    CommandInput(ScanBeginCommand, ScanCommandInstance),
-        ScanEnd:      CommandInput(ScanEndCommand, ScanCommandInstance),
+        InstName:        InstrumentInput(),
+        ScanScale:       CommandInput('scan.scale'),
+        ScanEndMode:     CommandInput('scan.end_mode'),
+        ScanPeriod:      CommandInput('scan.period'),
+        ScanAttenuation: CommandInput(ScanAttenuationCommand),
+        ScanInterval:    CommandInput('scan.interval'),
+        ScanBegin:       CommandInput(ScanBeginCommand),
+        ScanEnd:         CommandInput(ScanEndCommand),
     }

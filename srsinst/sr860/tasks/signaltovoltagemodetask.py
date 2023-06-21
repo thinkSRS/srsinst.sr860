@@ -26,15 +26,15 @@ both A and B on the front panel.
 
     input_parameters = {
         InstName:       InstrumentInput(),
-        InputMode:      CommandInput('signal.voltage_input_mode', Signal.voltage_input_mode),
-        InputCoupling:  CommandInput('signal.voltage_input_coupling', Signal.voltage_input_coupling),
-        InputShield:    CommandInput('signal.voltage_input_shield', Signal.voltage_input_shield),
-        InputRange:     CommandInput('signal.voltage_input_range', Signal.voltage_input_range),
-        InputSens:      CommandInput('signal.voltage_sensitivity', Signal.voltage_sensitivity),
-        TimeConstant:   CommandInput('signal.time_constant', Signal.time_constant),
-        FilterSlope:    CommandInput('signal.filter_slope', Signal.filter_slope),
-        SyncFilter:     CommandInput('signal.sync_filter', Signal.sync_filter),
-        AdvancedFilter: CommandInput('signal.advanced_filter', Signal.advanced_filter)
+        InputMode:      CommandInput('signal.voltage_input_mode'),
+        InputCoupling:  CommandInput('signal.voltage_input_coupling'),
+        InputShield:    CommandInput('signal.voltage_input_shield'),
+        InputRange:     CommandInput('signal.voltage_input_range'),
+        InputSens:      CommandInput('signal.voltage_sensitivity'),
+        TimeConstant:   CommandInput('signal.time_constant'),
+        FilterSlope:    CommandInput('signal.filter_slope'),
+        SyncFilter:     CommandInput('signal.sync_filter'),
+        AdvancedFilter: CommandInput('signal.advanced_filter'),
     }
 
     def setup(self):
