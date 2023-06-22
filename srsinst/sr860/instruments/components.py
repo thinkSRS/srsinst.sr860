@@ -501,7 +501,7 @@ class Scan2M(Scan):
     def __init__(self, parent):
         super().__init__(parent)
         self.frequency_range = FloatIndexCommand('SCNFREQ', 1, 0, Scan.RangeDict, 'Hz', 0.001, Reference2M.MaxFrequency, 0.0001, 6, 100000.0)
-        self.add_parent_to_indexcommands()
+        self.add_parent_to_index_commands()
 
 class Scan4M(Scan):
     def __init__(self, parent):
