@@ -119,7 +119,7 @@ wish to return the motor to a OFF state.
 
             t_elapsed_s = 0            
             while(self.chopper.operate.motor_state == CKeys.ON):
-                time.sleep(1.0)                              
+                self.delay(1.0)                              
                 t_elapsed_s += dt_s
 
                 if t_elapsed_s > timeout_s:
@@ -140,7 +140,7 @@ wish to return the motor to a OFF state.
         control_target = self.chopper.config.control_target        
         t_elapsed_s = 0        
         while(True):
-            time.sleep(dt_s)            
+            self.delay(dt_s)            
             t_elapsed_s += dt_s
             chopper_f = self.chopper.operate.frequency_monitor[control_target]
             freq_locked = self.chopper.status.chopper_condition_bit['FL']
@@ -154,7 +154,7 @@ wish to return the motor to a OFF state.
 
         t_elapsed_s = 0
         while(True):
-            time.sleep(dt_s)            
+            self.delay(dt_s)            
             t_elapsed_s += dt_s
             ext_unlock = self.lockin.status.lock_in_bit['UNLK']
             if(not ext_unlock):
