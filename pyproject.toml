@@ -24,7 +24,7 @@ classifiers = [
         "Topic :: Scientific/Engineering"
 ]
 dependencies = [
-    "numpy", "python-vxi11", "srsgui>=0.3.2",
+    "numpy", "python-vxi11", "srsgui>=0.4.0",
 ]
 dynamic = ["version"]
 
@@ -34,6 +34,10 @@ version = {attr = "srsinst.sr860.__version__"}
 [project.optional-dependencies]
 full = ['matplotlib >= 3.6.2', 'pyside6']
 # For Dependency specification, Refer to PEP 631
+
+[project.urls]
+homepage = "https://github.com/thinkSRS/srsinst.sr860"
+repository = "https://github.com/thinkSRS/srsinst.sr860.git"
 
 [project.scripts]
 sr860 = "srsinst.sr860.__main__:main"
