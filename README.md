@@ -1,6 +1,6 @@
 # Srsinst.sr860
 
-`srsinst.sr860` is a Python package to configure and acquire data from  
+`srsinst.sr860` is a Python package to control and acquire data from  
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
  SR860, SR865 and SR865A.
 

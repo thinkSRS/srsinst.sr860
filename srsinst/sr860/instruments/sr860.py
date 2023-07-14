@@ -1,3 +1,7 @@
+##! 
+##! Copyright(c) 2023 Stanford Research Systems, All rights reserved
+##! Subject to the MIT License
+##! 
 
 from .vxi11interface import Vxi11Interface
 from .visainterface import VisaInterface

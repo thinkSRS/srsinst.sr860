@@ -1,3 +1,8 @@
+##! 
+##! Copyright(c) 2023 Stanford Research Systems, All rights reserved
+##! Subject to the MIT License
+##! 
+
 from srsgui import Task
 from srsgui import ListInput, InstrumentInput, CommandInput
 

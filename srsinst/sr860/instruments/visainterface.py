@@ -1,3 +1,7 @@
+##! 
+##! Copyright(c) 2023 Stanford Research Systems, All rights reserved
+##! Subject to the MIT License
+##! 
 
 from srsgui.inst.exceptions import InstCommunicationError
 from srsgui.inst.communications.interface import Interface
