@@ -16,7 +16,7 @@ from srsinst.sr542 import get_sr542
 from srsinst.sr542.instruments.components import Config
 from srsinst.sr542.instruments.keys import Keys as CKeys
 
-import debugpy
+# import debugpy
 
 class SetRefToExternalWithSR542Task(Task):
     """
@@ -86,7 +86,7 @@ wish to return the motor to a OFF state.
         self.chopper = get_sr542(self, self.params[self.ChopperName])
         
     def test(self):    
-        debugpy.debug_this_thread()                        
+        # debugpy.debug_this_thread()
         self.lockin.ref.reference_source = LKeys.External
         self.lockin.ref.trigger_mode = LKeys.PositiveTTL
         self.lockin.ref.trigger_input = LKeys.R1Meg
