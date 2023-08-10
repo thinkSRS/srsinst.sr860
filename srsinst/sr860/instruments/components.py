@@ -778,8 +778,6 @@ class System(Component):
         Keys.Matlab: 1
     }
 
-    time = IntIndexCommand('TIME', 2, 0, TimeDict)
-    date = IntIndexCommand('DATE', 2, 0, DateDict)
     timebase_mode = DictCommand('TBMODE', Reference.TimebaseModeDict)
     timebase_source = DictCommand('TBSTAT', Reference.TimebaseSourceDict)
     blazex_output = DictCommand('BLAZEX', BlazeXOutputDict)
@@ -789,6 +787,12 @@ class System(Component):
     file_name_prefix = Command('FBAS')
     file_number = IntCommand('FNUM')
     next_file_name = GetCommand('FNXT')
+
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.time = IntIndexCommand('TIME', 2, 0, System.TimeDict)
+        self.date = IntIndexCommand('DATE', 2, 0, System.DateDict)
+        self.add_parent_to_index_commands()
 
     def capture_screen(self):
         self.comm.send('DCAP')

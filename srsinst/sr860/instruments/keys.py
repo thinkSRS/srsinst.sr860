@@ -138,9 +138,9 @@ class Keys:
 
     # System component
 
-    Second = 'seconds'
-    Minute = 'minutes'
-    Hour = 'hours'
+    Second = 'second'
+    Minute = 'minute'
+    Hour = 'hour'
 
     Day = 'day'
     Month = 'month'
