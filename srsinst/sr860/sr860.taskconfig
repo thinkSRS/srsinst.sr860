@@ -3,6 +3,13 @@
 
 name: SR860 tasks
 
+# A line starting with 'docs' is used as a documentation link.
+# Documentation links will appear in the Help menu.
+# The first item in the line is used as the documentation name.
+# The second item is used as a URL that whill open with the system default web browser.
+
+docs: Srsinst.sr860, https://pypi.org/project/srsinst.sr860/
+docs: Srsgui, https://thinksrs.github.io/srsgui/
 
 # Specify Instruments used in the task suite
 # A line that starts with 'inst' adds an instrument to be used in the following tasks.

@@ -16,7 +16,7 @@ from .components import Reference, Reference2M, Reference4M,\
                         Display, Chart, FFT, \
                         Scan, Scan2M, Scan4M,\
                         DataTransfer, DataCapture, DataStream,\
-                        Status
+                        System, Interface, Status
 
 
 class SR860(Instrument):
@@ -68,6 +68,8 @@ class SR860(Instrument):
         self.data = DataTransfer(self)
         self.capture = DataCapture(self)
         self.stream = DataStream(self)
+        self.system = System(self)
+        self.interface = Interface(self)
         self.status = Status(self)
 
         # Exclude components from capture_commands()

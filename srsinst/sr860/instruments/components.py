@@ -743,6 +743,70 @@ class DataStream(Component):
         self.udp_socket.close()
 
 
+class System(Component):
+    TimeDict = {
+        Keys.Second: 0,
+        Keys.Minute: 1,
+        Keys.Hour: 2
+    }
+
+    DateDict = {
+        Keys.Day: 0,
+        Keys.Month: 1,
+        Keys.Year: 2
+    }
+
+    BlazeXOutputDict = {
+        Keys.BlazeX: 0,
+        Keys.BipolarSync: 1,
+        Keys.UnipolarSync: 2
+    }
+
+    OnMuteDict = {
+        Keys.On: 0,
+        Keys.Mute: 1
+    }
+
+    ScreenShotModeDict = {
+        Keys.Screen: 0,
+        Keys.Print: 1,
+        Keys.Monochrome: 2
+    }
+
+    FileFormatDict = {
+        Keys.CSV: 0,
+        Keys.Matlab: 1
+    }
+
+    time = IntIndexCommand('TIME', 2, 0, TimeDict)
+    date = IntIndexCommand('DATE', 2, 0, DateDict)
+    timebase_mode = DictCommand('TBMODE', Reference.TimebaseModeDict)
+    timebase_source = DictCommand('TBSTAT', Reference.TimebaseSourceDict)
+    blazex_output = DictCommand('BLAZEX', BlazeXOutputDict)
+    key_click = DictCommand('KEYC', OnMuteDict)
+    screen_shot_mode = DictCommand('PRMD', ScreenShotModeDict)
+    data_file_format = DictCommand('SDFM', FileFormatDict)
+    file_name_prefix = Command('FBAS')
+    file_number = IntCommand('FNUM')
+    next_file_name = GetCommand('FNXT')
+
+    def capture_screen(self):
+        self.comm.send('DCAP')
+
+    def save_data(self):
+        self.comm.send('SVDT')
+
+    allow_run_button = [capture_screen, save_data]
+
+
+class Interface(Component):
+    id_string = GetCommand('*IDN')
+    test = IntGetCommand('*TST')
+    operation_complete = BoolGetCommand('*OPC')
+    # remote = BoolCommand('LOCL')  # not working
+    override_remote = BoolCommand('OVRM')
+
+
 class Status(Component):
     SerialPollStatusBitDict = {
         Keys.ERR: 2,

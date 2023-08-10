@@ -136,6 +136,29 @@ class Keys:
     LittleEndian = 'little endian'
     DataIntegrityChecking = 'data checking'
 
+    # System component
+
+    Second = 'seconds'
+    Minute = 'minutes'
+    Hour = 'hours'
+
+    Day = 'day'
+    Month = 'month'
+    Year = 'year'
+
+    BlazeX = 'blazex'
+    BipolarSync = 'bipolar sync'
+    UnipolarSync = 'unipolar sync'
+
+    Mute = 'mute'
+
+    Screen = 'screen'
+    Print = 'print'
+    Monochrome = 'monochrome'
+
+    CSV = 'csv'
+    Matlab = 'matlab'
+
     # Status component
 
     ERR = 'ERR'
