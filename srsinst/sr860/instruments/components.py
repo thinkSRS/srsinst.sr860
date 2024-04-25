@@ -75,8 +75,8 @@ class Reference(Component):
     blade_slots = DictCommand('BLADESLOTS', BladeSlotsDict, None, 'slots')
     blade_phase = FloatCommand('BLADEPHASE', '°')
     
-    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 4, 0.0)
-    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 4, 0.0)
+    sine_out_amplitude = FloatCommand('SLVL', ' V', 0, 2.0, 1e-9, 3, 0.0)
+    sine_out_offset = FloatCommand('SOFF', 'V', -5.0, 5.0, 1e-4, 3, 0.0)
     sine_out_dc_mode = DictCommand('REFM', SineOutDCModeDict)
     reference_source = DictCommand('RSRC', ReferenceSourceDict)
     

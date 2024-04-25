@@ -2,9 +2,10 @@
 
 `srsinst.sr860` is a Python package to control and acquire data from  
 [Stanford Research Systems (SRS) SR860 series Lock-In Amplifiers](https://thinksrs.com/products/sr865a.html):
- SR860, SR865 and SR865A.
+SR860, SR865 and SR865A. If you prefer instructional videos, 
+watch [these videos](https://www.youtube.com/playlist?list=PLnZT3yqji4iXZsnPbufkaAGROhm99UvKP).
 
-![screenshot](https://github.com/thinkSRS/srsinst.sr860/blob/main/docs/_static/image/SR860_screenshot.png?raw=true " ")
+![screenshot](https://github.com/thinkSRS/srsinst.sr860/blob/main/docs/_static/image/SR860_screenshot.png?raw=true " ").
 
 ## Installation
 You need a working Python 3.7 or later with `pip` (Python package installer) 
