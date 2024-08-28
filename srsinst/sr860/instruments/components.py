@@ -581,32 +581,42 @@ class DataCapture(Component):
     def get_all_data(self):
         data_type = self.config
         final_index = self.data_size_in_kilobytes
+
+        stop_index_kb = min(64, final_index)
+        kb_remaining = final_index
+        start_index_kb = 0
+        vals = []
         
         with self.comm.get_lock():
-            self.comm._send(f'CAPTUREGET? 0, {final_index:d}')
-            buffer = self.comm._read_binary(2)
-            # buffer[0] should be 35            
-            digits = buffer[1] - 48
+            while(kb_remaining > 0):
+                self.comm._send(f'CAPTUREGET? {start_index_kb:d}, {stop_index_kb:d}')
+                buffer = self.comm._read_binary(2)
+                # buffer[0] should be 35            
+                digits = buffer[1] - 48
+                
+                buffer += self.comm._read_binary(digits)
+                offset = digits + 2
+                buffer_size = int(buffer[2: offset])
+                buffer += self.comm._read_binary(buffer_size)
             
-            buffer += self.comm._read_binary(digits)
-            offset = digits + 2
-            buffer_size = int(buffer[2: offset])
-            buffer += self.comm._read_binary(buffer_size)
-            
-        data_size = (len(buffer) - offset) // 4
-        self.unpack_format = '>{}f'.format(data_size)
-        vals = unpack_from(self.unpack_format, buffer, offset)
-        if data_type == Keys.X:
-            column = 1
-        elif data_type == Keys.XY or data_type == 'RT':
-            column = 2
-        elif data_type == Keys.XYRT:
-            column = 4
-        else:
-            ValueError('Invalid data type {} in get_all_data()'.format(data_type))
-            
-        row = len(vals) // column
-        arr = np.transpose(np.reshape(vals, (row, column)))    
+                data_size = (len(buffer) - offset) // 4
+                self.unpack_format = '>{}f'.format(data_size)
+                block_vals = unpack_from(self.unpack_format, buffer, offset)
+                vals += block_vals
+                start_index_kb += stop_index_kb
+                kb_remaining -= stop_index_kb
+
+            if data_type == Keys.X:
+                column = 1
+            elif data_type == Keys.XY or data_type == Keys.RT:
+                column = 2
+            elif data_type == Keys.XYRT:
+                column = 4
+            else:
+                ValueError('Invalid data type {} in get_all_data()'.format(data_type))
+                    
+            row = len(vals) // column
+            arr = np.transpose(np.reshape(vals, (row, column)))    
         return arr
 
 
