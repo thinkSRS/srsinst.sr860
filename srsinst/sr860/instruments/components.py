@@ -590,16 +590,14 @@ class DataCapture(Component):
         :returns: a numpy array with one, two, or four columns depending on the value of CAPTURECFG.
         The length of each column depends on the number of data points in the capture buffer.
         """
-        data_type = self.config
-        final_index = self.data_size_in_kilobytes
-
-        stop_index_kb = min(64, final_index)
-        kb_remaining = final_index
+        data_type = self.config                
+        bytes_remaining = self.data_size_in_kilobytes * 1024
         start_index_kb = 0
         vals = []
         
         with self.comm.get_lock():
-            while(kb_remaining > 0):
+            while(bytes_remaining > 0):
+                stop_index_kb = min(64, int(np.ceil(bytes_remaining / 1024.0)))
                 self.comm._send(f'CAPTUREGET? {start_index_kb:d}, {stop_index_kb:d}')
                 buffer = self.comm._read_binary(2)
                 # buffer[0] should be 35            
@@ -610,12 +608,12 @@ class DataCapture(Component):
                 buffer_size = int(buffer[2: offset])
                 buffer += self.comm._read_binary(buffer_size)
             
-                data_size = (len(buffer) - offset) // 4
+                data_size = (len(buffer) - offset) // 4                
                 self.unpack_format = '>{}f'.format(data_size)
                 block_vals = unpack_from(self.unpack_format, buffer, offset)
                 vals += block_vals
                 start_index_kb += stop_index_kb
-                kb_remaining -= stop_index_kb
+                bytes_remaining -= stop_index_kb * 1024
 
             if data_type == Keys.X:
                 column = 1
