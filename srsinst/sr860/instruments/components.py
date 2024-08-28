@@ -579,6 +579,12 @@ class DataCapture(Component):
         return list(map(float, reply.split(',')))
         
     def get_all_data(self):
+        """
+        Use the CAPTUREGET? binary transfer command to retrieve the entire capture buffer. 
+
+        :returns: a numpy array with one, two, or four columns depending on the value of CAPTURECFG.
+        The length of each column depends on the number of data points in the capture buffer.
+        """
         data_type = self.config
         final_index = self.data_size_in_kilobytes
 
