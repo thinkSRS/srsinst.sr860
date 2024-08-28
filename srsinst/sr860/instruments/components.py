@@ -575,6 +575,11 @@ class DataCapture(Component):
         self.comm.send('CAPTURESTOP')
 
     def get_data(self, index):
+        """
+        Use the CAPTUREVAL? query to retrieve data from a single position in the capture buffer.
+
+        :returns: one, two, or four floating point values depending on the value of CAPTURECFG
+        """
         reply = self.comm.query_text(f'CAPTUREVAL? {index}')
         return list(map(float, reply.split(',')))
         
