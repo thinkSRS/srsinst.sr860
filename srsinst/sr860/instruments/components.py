@@ -575,38 +575,57 @@ class DataCapture(Component):
         self.comm.send('CAPTURESTOP')
 
     def get_data(self, index):
+        """
+        Use the CAPTUREVAL? query to retrieve data from a single position in the capture buffer.
+
+        :returns: one, two, or four floating point values depending on the value of CAPTURECFG
+        """
         reply = self.comm.query_text(f'CAPTUREVAL? {index}')
         return list(map(float, reply.split(',')))
         
     def get_all_data(self):
-        data_type = self.config
-        final_index = self.data_size_in_kilobytes
+        """
+        Use the CAPTUREGET? binary transfer command to retrieve the entire capture buffer. 
+
+        :returns: a numpy array with one, two, or four columns depending on the value of CAPTURECFG.
+        The length of each column depends on the number of data points in the capture buffer.
+        """
+        data_type = self.config                
+        bytes_remaining = self.data_size_in_kilobytes * 1024
+        start_index_kb = 0
+        vals = []
         
         with self.comm.get_lock():
-            self.comm._send(f'CAPTUREGET? 0, {final_index:d}')
-            buffer = self.comm._read_binary(2)
-            # buffer[0] should be 35            
-            digits = buffer[1] - 48
+            while(bytes_remaining > 0):
+                stop_index_kb = min(64, int(np.ceil(bytes_remaining / 1024.0)))
+                self.comm._send(f'CAPTUREGET? {start_index_kb:d}, {stop_index_kb:d}')
+                buffer = self.comm._read_binary(2)
+                # buffer[0] should be 35            
+                digits = buffer[1] - 48
+                
+                buffer += self.comm._read_binary(digits)
+                offset = digits + 2
+                buffer_size = int(buffer[2: offset])
+                buffer += self.comm._read_binary(buffer_size)
             
-            buffer += self.comm._read_binary(digits)
-            offset = digits + 2
-            buffer_size = int(buffer[2: offset])
-            buffer += self.comm._read_binary(buffer_size)
-            
-        data_size = (len(buffer) - offset) // 4
-        self.unpack_format = '>{}f'.format(data_size)
-        vals = unpack_from(self.unpack_format, buffer, offset)
-        if data_type == Keys.X:
-            column = 1
-        elif data_type == Keys.XY or data_type == 'RT':
-            column = 2
-        elif data_type == Keys.XYRT:
-            column = 4
-        else:
-            ValueError('Invalid data type {} in get_all_data()'.format(data_type))
-            
-        row = len(vals) // column
-        arr = np.transpose(np.reshape(vals, (row, column)))    
+                data_size = (len(buffer) - offset) // 4                
+                self.unpack_format = '>{}f'.format(data_size)
+                block_vals = unpack_from(self.unpack_format, buffer, offset)
+                vals += block_vals
+                start_index_kb += stop_index_kb
+                bytes_remaining -= stop_index_kb * 1024
+
+            if data_type == Keys.X:
+                column = 1
+            elif data_type == Keys.XY or data_type == Keys.RT:
+                column = 2
+            elif data_type == Keys.XYRT:
+                column = 4
+            else:
+                ValueError('Invalid data type {} in get_all_data()'.format(data_type))
+                    
+            row = len(vals) // column
+            arr = np.transpose(np.reshape(vals, (row, column)))    
         return arr
 
 
