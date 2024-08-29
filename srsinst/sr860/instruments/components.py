@@ -587,7 +587,8 @@ class DataCapture(Component):
         """
         Use the CAPTUREGET? binary transfer command to retrieve the entire capture buffer. 
 
-        :returns: a numpy array with one, two, or four columns depending on the value of CAPTURECFG.
+        :returns: a numpy array of single precision floats, with one, two, or four columns 
+        depending on the value of CAPTURECFG.
         The length of each column depends on the number of data points in the capture buffer.
         """
         data_type = self.config                
@@ -626,7 +627,7 @@ class DataCapture(Component):
                 ValueError('Invalid data type {} in get_all_data()'.format(data_type))
                     
             row = len(vals) // column
-            arr = np.transpose(np.reshape(vals, (row, column)))    
+            arr = np.transpose(np.reshape(vals, (row, column))).astype(np.float32)    
         return arr
 
 
