@@ -587,11 +587,12 @@ class DataCapture(Component):
         """
         Use the CAPTUREGET? binary transfer command to retrieve the entire capture buffer. 
 
-        :returns: a numpy array with one, two, or four columns depending on the value of CAPTURECFG.
+        :returns: a numpy array of single precision floats, with one, two, or four columns 
+        depending on the value of CAPTURECFG.
         The length of each column depends on the number of data points in the capture buffer.
         """
         data_type = self.config                
-        bytes_remaining = self.data_size_in_kilobytes * 1024
+        bytes_remaining = self.data_size_in_bytes
         start_index_kb = 0
         vals = []
         
@@ -608,8 +609,9 @@ class DataCapture(Component):
                 buffer_size = int(buffer[2: offset])
                 buffer += self.comm._read_binary(buffer_size)
             
-                data_size = (len(buffer) - offset) // 4                
-                self.unpack_format = '>{}f'.format(data_size)
+                data_size_bytes = (len(buffer) - offset)
+                bytes_to_unpack = min(bytes_remaining, data_size_bytes)
+                self.unpack_format = '<{}f'.format(bytes_to_unpack // 4)
                 block_vals = unpack_from(self.unpack_format, buffer, offset)
                 vals += block_vals
                 start_index_kb += stop_index_kb
@@ -625,7 +627,7 @@ class DataCapture(Component):
                 ValueError('Invalid data type {} in get_all_data()'.format(data_type))
                     
             row = len(vals) // column
-            arr = np.transpose(np.reshape(vals, (row, column)))    
+            arr = np.transpose(np.reshape(vals, (row, column))).astype(np.float32)    
         return arr
 
 
