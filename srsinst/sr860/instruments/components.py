@@ -705,6 +705,7 @@ class DataStream(Component):
         self.udp_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.udp_socket.bind(('', self.port))
         self.timeout = 10
+        self.option = 2
         self.udp_socket.settimeout(self.timeout)
         self.prepared_channel = self.channel
 
