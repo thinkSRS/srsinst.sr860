@@ -1,7 +1,7 @@
-##! 
+##!
 ##! Copyright(c) 2023 Stanford Research Systems, All rights reserved
 ##! Subject to the MIT License
-##! 
+##!
 
 import logging
 import vxi11
@@ -13,7 +13,7 @@ logger = logging.getLogger(__file__)
 
 
 class Vxi11Interface(Interface):
-    
+
     NAME = 'vxi11'
 
     def __init__(self):
@@ -21,8 +21,7 @@ class Vxi11Interface(Interface):
         self.type = Vxi11Interface.NAME
         self._vxi = None
         self._ip_address = ''
-        self._timeout = 20
-        
+
     def connect(self, ip_address):
         try:
             self._vxi = vxi11.Instrument(ip_address)
@@ -87,12 +86,11 @@ class Vxi11Interface(Interface):
         return reply
 
     def set_timeout(self, timeout):
-        self._timeout = timeout
         if self._vxi:
-            self._vxi.timeout = timeout * 1000
+            self._vxi.timeout = timeout
 
     def get_timeout(self):
-        return self._timeout
+        return self._vxi.timeout 
 
     def clear_buffer(self):
         self._vxi.clear()
