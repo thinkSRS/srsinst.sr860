@@ -609,7 +609,7 @@ class DataCapture(Component):
                 buffer += self.comm._read_binary(buffer_size)
             
                 data_size = (len(buffer) - offset) // 4                
-                self.unpack_format = '>{}f'.format(data_size)
+                self.unpack_format = '<{}f'.format(data_size)
                 block_vals = unpack_from(self.unpack_format, buffer, offset)
                 vals += block_vals
                 start_index_kb += stop_index_kb
