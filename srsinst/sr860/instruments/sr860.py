@@ -77,6 +77,9 @@ class SR860(Instrument):
         self.exclude_capture.append(self.chart)
         self.exclude_capture.append(self.fft)
 
+        if isinstance(self.comm, TcpipInterface) and self.is_connected():
+            print(self.query_text(''))  # Read out the initial string
+
     def connect(self, interface_type, *args):
         super().connect(interface_type, *args)
         if isinstance(self.comm, TcpipInterface):

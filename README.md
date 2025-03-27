@@ -24,6 +24,9 @@ By default, srsinst.sr860 offers RS232 serial and VXI11 interfaces for communica
 To communication over GPIB or USB-TMC interface, PyVisa is required. Refer to 
 [PyVisa documentation](https://pyvisa.readthedocs.io/en/latest/) for its installation.
 
+SR860s can choose the termination character for RS232 and TELENT communication. 
+Make sure the line feed, LF, is selected from the SR860 front panel menu.
+
 ## Run `srsinst.sr860` as GUI application
 If the Python Scripts directory is in PATH environment variable,
 Start the application by typing from the command line:
